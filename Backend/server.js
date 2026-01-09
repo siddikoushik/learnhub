@@ -9,6 +9,7 @@ import connectDB from "./config/db.js";
 import studentRoutes from "./routes/studentRoutes.js";
 import teacherRoutes from "./routes/teacherRoutes.js";
 import userRouter from "./routes/userRouter.js";
+import bookingRoutes from "./routes/bookingRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -26,6 +27,7 @@ app.use("/images", express.static(path.join(process.cwd(), "uploads")));
 app.use("/api/student", studentRoutes);
 app.use("/api/user", userRouter);
 app.use("/api/teacher", teacherRoutes);
+app.use("/api/booking", bookingRoutes);
 
 // Test route
 app.get("/", (req, res) => {
@@ -78,7 +80,7 @@ io.on("connection", (socket) => {
 });
 
 /* -------------------- Start Server -------------------- */
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 server.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
 });

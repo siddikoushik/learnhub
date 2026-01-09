@@ -2,14 +2,16 @@ import React from 'react'
 import './Home.css'
 import About from '../../components/About/About'
 import Hero from '../../components/Hero/Hero'
-import Auth from '../../components/Auth/Auth'
+import Contact from '../../components/Contact/Contact'
 
-const Home = ({login,setLogin,techpro,setTechpro}) => {
+const Home = ({ login, setLogin, techpro, setTechpro }) => {
   return (
     <div>
-        {login && (<Auth login={login} setLogin={setLogin} techpro={techpro} setTechpro={setTechpro}/>)}
-        <Hero/>
-      <About/>
+      <Hero />
+      <div id="about">
+        <About />
+      </div>
+      <Contact />
     </div>
   )
 }

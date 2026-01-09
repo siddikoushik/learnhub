@@ -5,7 +5,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { assets } from "../../assets/frontendImages";
 
 const Navbar = ({ setLogin }) => {
-  const { token, setToken, menu } = useContext(AuthContext);
+  const { token, setToken, user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
 
@@ -24,19 +24,39 @@ const Navbar = ({ setLogin }) => {
 
       {/* MENU */}
       <ul className="nav-links">
-        <li onClick={() => navigate("/")}>Home</li>
-        <li>AboutUs</li>
-        <li>Contact</li>
-        <li
-          onClick={() =>
-            menu === "students"
-              ? navigate("/teachersmenu")
-              : navigate("/studentsmenu")
+        <li onClick={() => {
+          navigate("/");
+          window.scrollTo(0, 0);
+        }}>Home</li>
 
-          }
+        <li
+          onClick={() => {
+            if (user?.role === 'teacher') {
+              navigate("/teachersmenu/dashboard");
+            } else if (user?.role === 'student') {
+              navigate("/studentsmenu/dashboard");
+            } else {
+              // Fallback or default behavior
+              navigate("/studentsmenu");
+            }
+          }}
         >
           Dashboard
         </li>
+
+        <li onClick={() => {
+          navigate("/");
+          setTimeout(() => {
+            document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        }}>AboutUs</li>
+
+        <li onClick={() => {
+          navigate("/");
+          setTimeout(() => {
+            document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
+          }, 100);
+        }}>Contact</li>
       </ul>
 
       {/* NOTIFICATION */}
@@ -59,15 +79,15 @@ const Navbar = ({ setLogin }) => {
             <img src={assets.profile_icon} alt="profile" />
 
             {showMenu && (
-  <ul className="nav-profile-menu">
-    <li onClick={() => navigate("/profile")}>
-      <span>Profile</span>
-    </li>
-    <li onClick={logout}>
-      <span>Logout</span>
-    </li>
-  </ul>
-)}
+              <ul className="nav-profile-menu">
+                <li onClick={() => navigate("/profile")}>
+                  <span>Profile</span>
+                </li>
+                <li onClick={logout}>
+                  <span>Logout</span>
+                </li>
+              </ul>
+            )}
 
           </div>
         )}

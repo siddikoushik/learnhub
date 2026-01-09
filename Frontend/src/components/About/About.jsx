@@ -1,79 +1,78 @@
 import React from "react";
 import "./About.css";
+import { motion } from "framer-motion";
 
 const About = () => {
+  const features = [
+    { title: "Expert Mentors", desc: "Learn from industry leaders from top tech companies.", icon: "👨‍🏫" },
+    { title: "Interactive Learning", desc: "Live sessions, quizzes, and hands-on projects.", icon: "💻" },
+    { title: "Career Guidance", desc: "Resume reviews and mock interviews to get you hired.", icon: "🚀" },
+    { title: "Community Support", desc: "Join 10k+ learners helping each other grow.", icon: "🤝" },
+  ];
+
+  const testimonials = [
+    { name: "Alex Johnson", role: "Software Engineer", comment: "LearnHub helped me switch careers from sales to tech in just 6 months!", image: "https://i.pravatar.cc/100?img=11" },
+    { name: "Sarah Lee", role: "Product Designer", comment: "The mentorship I received here was invaluable. Highly recommended!", image: "https://i.pravatar.cc/100?img=5" },
+    { name: "David Kim", role: "Data Scientist", comment: "Best platform for deep diving into detailed technical topics.", image: "https://i.pravatar.cc/100?img=3" },
+  ];
+
   return (
-    <div className="about-container">
-      {/* Header */}
-      <section className="about-header">
-        <h1 className="about-title">About <span>LearnHub</span></h1>
-        <p className="about-subtitle">
-          LearnHub is your trusted platform for smart learning — connecting
-          students and tutors for a seamless learning experience.
-        </p>
-      </section>
+    <div className="about-container container">
 
-      {/* Main Content */}
-      <section className="about-main">
-        <div className="about-text">
-          <h2>Empowering Students Through Smart Learning</h2>
-          <p>
-            At <strong>LearnHub</strong>, we believe that education should be
-            accessible, flexible, and tailored to individual learning goals.  
-            Our platform helps students book personalized sessions with verified
-            tutors, access interactive resources, and track their academic progress.
-          </p>
-
-          <div className="about-section">
-            <h3>🎯 Our Mission</h3>
-            <p>
-              To make quality education accessible to every student by bridging
-              the gap between learners and skilled educators.
-            </p>
-          </div>
-
-          <div className="about-section">
-            <h3>🌐 Our Vision</h3>
-            <p>
-              To build the most trusted and student-friendly digital platform
-              where learners can grow academically and professionally.
-            </p>
-          </div>
-
-          <div className="about-section">
-            <h3>🚀 Why Choose LearnHub?</h3>
-            <ul>
-              <li>Simple and user-friendly booking system</li>
-              <li>Verified tutors across multiple domains</li>
-              <li>Secure payment options and transparent pricing</li>
-              <li>Personalized dashboard for students & tutors</li>
-              <li>24/7 support and feedback system</li>
-            </ul>
-          </div>
-
-          <a href="/register" className="about-btn">Join LearnHub Today</a>
+      {/* FEATURES SECTION */}
+      <section className="features-section">
+        <div className="section-header text-center">
+          <h2 className="section-title">Why Choose LearnHub?</h2>
+          <p className="section-subtitle">We provide everything you need to succeed in your career.</p>
         </div>
 
-        <div className="about-image">
-          {/* <img src={aboutImg} alt="About LearnHub" /> */}
+        <div className="features-grid">
+          {features.map((feature, index) => (
+            <motion.div
+              className="card feature-card"
+              key={index}
+              whileHover={{ y: -5 }}
+            >
+              <div className="feature-icon">{feature.icon}</div>
+              <h3>{feature.title}</h3>
+              <p>{feature.desc}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
 
-      {/* Stats Section */}
-      <section className="about-stats">
-        <div className="stat-card">
-          <h4>10K+</h4>
-          <p>Active Students</p>
+      {/* TESTIMONIALS SECTION */}
+      <section className="testimonials-section">
+        <div className="section-header text-center">
+          <h2 className="section-title">Trusted by Thousands</h2>
+          <p className="section-subtitle">See what our community has to say.</p>
         </div>
-        <div className="stat-card">
-          <h4>1.2K+</h4>
-          <p>Verified Tutors</p>
-        </div>
-        <div className="stat-card">
-          <h4>500+</h4>
-          <p>Courses Offered</p>
+
+        <div className="testimonials-grid">
+          {testimonials.map((t, index) => (
+            <div className="card testimonial-card" key={index}>
+              <p className="comment">"{t.comment}"</p>
+              <div className="user-info">
+                <img src={t.image} alt={t.name} />
+                <div>
+                  <h4>{t.name}</h4>
+                  <span>{t.role}</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
+
+      {/* CTA SECTION */}
+      <section className="cta-section">
+        <div className="cta-content">
+          <h2>Ready to Start Your Journey?</h2>
+          <p>Join LearnHub today and get access to your first course for free.</p>
+          <button className="btn-primary btn-large">Get Started Now</button>
+        </div>
+      </section>
+
     </div>
   );
 };

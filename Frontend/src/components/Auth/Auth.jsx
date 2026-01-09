@@ -10,13 +10,14 @@ import { useNavigate } from "react-router-dom";
 
 const Auth = ({ setLogin }) => {
   const [state, setState] = useState("signup");
-  const { setToken } = useContext(AuthContext);
+  const { loginUser, registerUser } = useContext(AuthContext); // Use context actions
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [conpass, setConpass] = useState("");
+  const [role, setRole] = useState("student"); // Default role
 
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,27 +30,33 @@ const Auth = ({ setLogin }) => {
     try {
       const url =
         state === "signup"
-          ? "http://localhost:5000/api/user/register"
-          : "http://localhost:5000/api/user/login";
+          ? "http://localhost:5001/api/user/register"
+          : "http://localhost:5001/api/user/login";
 
       const body =
         state === "signup"
-          ? { name, email, password }
+          ? { name, email, password, role }
           : { email, password };
 
       const res = await axios.post(url, body);
 
       if (res.data.success) {
-        
-        localStorage.setItem("token", res.data.token);
-        setToken(res.data.token);
+        // Use context functions to save User Data & Token
+        if (state === "signup") {
+          registerUser(res.data.user, res.data.token);
+        } else {
+          loginUser(res.data.user, res.data.token);
+        }
+
         setLogin(false);
         alert("Authentication Successful");
-        if(state==="signup"){
-          navigate("/profile");
-        }
-        else{
-          navigate("/")
+
+        const userRole = res.data.user?.role || role; // Use role from user object
+
+        if (userRole === "teacher") {
+          navigate("/teachersmenu/dashboard");
+        } else {
+          navigate("/studentsmenu/dashboard");
         }
       }
     } catch (err) {
@@ -95,19 +102,53 @@ const Auth = ({ setLogin }) => {
             placeholder="Enter Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
+            name="password"
+            autoComplete="new-password"
           />
 
           {state === "signup" && (
-            <input
-              className="auth-input"
-              type="password"
-              placeholder="Confirm Password"
-              value={conpass}
-              onChange={(e) => setConpass(e.target.value)}
-              required
-            />
+            <>
+              <input
+                className="auth-input"
+                type="password"
+                placeholder="Confirm Password"
+                value={conpass}
+                onChange={(e) => setConpass(e.target.value)}
+                required
+                name="confirmPassword"
+                autoComplete="new-password"
+              />
+              {conpass && password !== conpass && (
+                <p style={{ color: "red", fontSize: "12px", marginTop: "-10px", marginBottom: "10px" }}>
+                  Passwords do not match
+                </p>
+              )}
+            </>
           )}
+
+          {/* Role Selection */}
+          <div className="auth-role-selection" style={{ display: 'flex', gap: '20px', justifyContent: 'center', margin: '10px 0' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <input
+                type="radio"
+                name="role"
+                value="student"
+                checked={role === "student"}
+                onChange={(e) => setRole(e.target.value)}
+              />
+              Student
+            </label>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+              <input
+                type="radio"
+                name="role"
+                value="teacher"
+                checked={role === "teacher"}
+                onChange={(e) => setRole(e.target.value)}
+              />
+              Teacher
+            </label>
+          </div>
 
           <button className="auth-submit" type="submit">
             {state === "signup" ? "Sign Up" : "Login"}

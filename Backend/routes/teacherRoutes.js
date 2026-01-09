@@ -4,6 +4,7 @@ import {
   createTeacherProfile,
   getAllTeachers,
   getTeacherById,
+  manageAvailability
 } from "../controllers/teacherController.js";
 import AuthMiddleware from "../middleware/AuthMiddleware.js";
 
@@ -16,7 +17,7 @@ Trouter.post(
 );
 
 Trouter.get("/all", getAllTeachers);
-Trouter.get("/:id",AuthMiddleware, getTeacherById);
-
+Trouter.get("/:id", AuthMiddleware, getTeacherById);
+Trouter.post("/availability", AuthMiddleware, manageAvailability);
 
 export default Trouter;

@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [profile, setProfile] = useState(null);
   const [menu, setMenu] = useState("");
 
-  const url = "http://localhost:5000";
+  const url = "http://localhost:5001";
 
   // 🔐 Load auth data safely on app start
   useEffect(() => {

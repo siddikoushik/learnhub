@@ -20,6 +20,14 @@ router.post('/', async (req, res) => {
     const { studentId, teacherId, timeSlot } = req.body;
 
     try {
+        // 0. CHECK IF SLOT IS ALREADY BOOKED OR DOES NOT EXIST
+        const teacher = await User.findById(teacherId);
+        if (!teacher) return res.status(404).json({ success: false, message: "Teacher not found" });
+
+        const slot = teacher.availability.find(s => s.time === timeSlot);
+        if (!slot) return res.status(400).json({ success: false, message: "Slot not found" });
+        if (slot.isBooked) return res.status(400).json({ success: false, message: "Slot already booked" });
+
         // 1. Create Booking
         const newBooking = new Booking({
             studentId,
@@ -53,6 +61,21 @@ router.get('/student/:studentId', async (req, res) => {
         res.json({ success: true, bookings });
     } catch (error) {
         console.error("Error fetching student bookings:", error);
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
+});
+
+// GET /api/booking/teacher/:teacherId -> Get bookings for a teacher
+router.get('/teacher/:teacherId', async (req, res) => {
+    try {
+        const { teacherId } = req.params;
+        const bookings = await Booking.find({ teacherId })
+            .populate('studentId', 'name email') // Get student details
+            .sort({ createdAt: -1 }); // Newest first
+
+        res.json({ success: true, bookings });
+    } catch (error) {
+        console.error("Error fetching teacher bookings:", error);
         res.status(500).json({ success: false, message: "Server Error" });
     }
 });

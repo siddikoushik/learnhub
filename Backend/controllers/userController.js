@@ -94,4 +94,38 @@ export const login = async (req, res) => {
 
 
 
-export default { register, login }
+export const updateProfile = async (req, res) => {
+    try {
+        const userId = req.userId; // From middleware
+        const updates = req.body;
+
+        // Prevent updating critical fields directly if needed (e.g., email/role)
+        // For now, we allow updating everything passed in valid keys
+
+        const user = await userModel.findByIdAndUpdate(userId, { $set: updates }, { new: true }).select('-password');
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        res.json({ success: true, message: "Profile Updated", user });
+    } catch (error) {
+        console.error("Profile Update Error:", error);
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
+}
+
+
+export const getProfile = async (req, res) => {
+    try {
+        const userId = req.userId;
+        const user = await userModel.findById(userId).select('-password');
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        res.json({ success: true, user });
+    } catch (error) {
+        console.error("Get Profile Error:", error);
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
+}

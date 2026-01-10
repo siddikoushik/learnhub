@@ -4,21 +4,31 @@ import { AuthContext } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
-    const { user, isAuthenticated } = useContext(AuthContext);
+    const { user, isAuthenticated, token, url, setUser } = useContext(AuthContext); // Get token & url
     const navigate = useNavigate();
+
+    // Safety check: specific case where auth is true but user object is not yet populated
+    if (isAuthenticated && !user) {
+        return <div className="loading-container">Loading Profile...</div>;
+    }
 
     // File Input Refs
     const photoRef = React.useRef(null);
     const qrRef = React.useRef(null);
     const docRef = React.useRef(null);
 
-    // Local state for form fields 
+    // Combined state for all fields (init with user data)
     const [formData, setFormData] = useState({
-        age: '',
-        gender: 'Select',
+        age: user?.age || '',
+        gender: user?.gender || 'Select',
         subject: user?.subject || '',
-        topics: '',
-        phone: '',
+        topics: user?.topics || '', // Assuming topics exists or mapped to bio/skills
+        phone: user?.phone || '',
+        bio: user?.bio || '',
+        experience: user?.experience || '',
+        price: user?.price || '',
+        mode: user?.mode || 'Online',
+        education: user?.education || ''
     });
 
     if (!isAuthenticated) {
@@ -29,7 +39,7 @@ const Profile = () => {
         );
     }
 
-    const isTeacher = user.role === 'teacher';
+    const isTeacher = user?.role === 'teacher';
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,9 +56,33 @@ const Profile = () => {
         }
     };
 
-    const handleSave = (e) => {
+    const handleSave = async (e) => {
         e.preventDefault();
-        alert("Profile Updated Successfully! (Frontend Simulation)");
+        try {
+            // Need axios here (ensure it's imported or available globally, or use fetch)
+            // Using fetch for simplicity as axios might need import at top
+            const response = await fetch(`${url}/api/user/profile`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(formData)
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert("Profile Updated Successfully!");
+                // Optionally update context user to reflect changes immediately
+                // setUser(data.user); // If setUser is exposed
+            } else {
+                alert("Failed: " + data.message);
+            }
+        } catch (error) {
+            console.error("Profile Save Error:", error);
+            alert("Error saving profile");
+        }
     };
 
     return (

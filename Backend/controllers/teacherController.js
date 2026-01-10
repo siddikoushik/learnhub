@@ -72,12 +72,19 @@ export const manageAvailability = async (req, res) => {
     if (subject) user.subject = subject;
 
     if (action === 'add') {
-      // Prevent duplicates
-      const exists = user.availability.find(slot => slot.time === time);
-      if (!exists) {
-        user.availability.push({ time, isBooked: false });
-      }
+      // Handle Array of Times (Bulk Add) or Single String
+      const timesToAdd = Array.isArray(time) ? time : [time];
+
+      timesToAdd.forEach(t => {
+        // Prevent duplicates
+        const exists = user.availability.find(slot => slot.time === t);
+        if (!exists) {
+          user.availability.push({ time: t, isBooked: false });
+        }
+      });
+
     } else if (action === 'remove') {
+      // Remove specific slot
       user.availability = user.availability.filter(slot => slot.time !== time);
     }
 

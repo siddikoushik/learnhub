@@ -6,30 +6,62 @@ import { motion } from "framer-motion";
 import axios from 'axios';
 
 const TeachersDisplay = () => {
-  const { url, user, token } = useContext(AuthContext);
+  const { url, user, token, setUser } = useContext(AuthContext); // Get setUser to sync state
   const navigate = useNavigate();
   const [availability, setAvailability] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Load Availability on Mount
+  const [appointments, setAppointments] = useState([]);
+
+  // Load Availability and Bookings on Mount
   useEffect(() => {
-    if (user && user.availability) {
-      setAvailability(user.availability);
-      // Also fetch fresh profile to be sure
+    if (user && user._id) {
+      // Ideally we fetch fresh data to avoid stale localStorage issues
       fetchProfile();
+      fetchBookings();
     }
-  }, [user]);
+  }, [user?._id]); // Depend on ID safely
+
+  if (!user) {
+    return <div className="container" style={{ marginTop: '50px', textAlign: 'center' }}>Loading Dashboard...</div>;
+  }
+
+  const fetchBookings = async () => {
+    try {
+      const res = await axios.get(`${url}/api/booking/teacher/${user._id}`);
+      if (res.data.success) {
+        // Filter only CONFIRMED sessions
+        const confirmedSessions = res.data.bookings.filter(b => b.status === 'Confirmed');
+        setAppointments(confirmedSessions);
+      }
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+    }
+  };
 
   const fetchProfile = async () => {
     try {
-      // We use the booking/tutors endpoint or similar, or just rely on user context if it's updated.
-      // For now, let's assume valid user context context updates.
+      const res = await axios.get(`${url}/api/user/profile`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.data.success) {
+        const freshUser = res.data.user;
+        // Update context if data changed (avoid loop if possible, but simpler here)
+        // We mainly want availability
+        if (freshUser.availability) {
+          setAvailability(freshUser.availability);
+          // Check if we need to sync context
+          // setUser(freshUser); // Optional: might cause re-render loop if not careful.
+          // For now, setting local state is enough for "Active Slots" to show up.
+        }
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Fetch Profile Error:", error);
     }
   };
 
   const handleAvailability = async (action, timeSlot, subjectVal) => {
+    // ... existing handleAvailability logic
     setLoading(true);
     try {
       const { data } = await axios.post(
@@ -40,11 +72,13 @@ const TeachersDisplay = () => {
           time: timeSlot,
           subject: subjectVal
         },
-        { headers: { Authorization: `Bearer ${token}` } } // Correct Header Format
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (data.success) {
         setAvailability(data.availability);
+        // SYNC CONTEXT
+        setUser({ ...user, availability: data.availability });
         alert(action === 'add' ? "Slot Added!" : "Slot Removed!");
       } else {
         alert(data.message);
@@ -57,16 +91,12 @@ const TeachersDisplay = () => {
     }
   };
 
-  // Mock Stats (Keep these for visual appeal)
+  // Mock Stats (Keep these for visual appeal or update with real data later)
   const mockStats = [
-    { label: "Upcoming Sessions", value: "3", icon: "📅" },
+    { label: "Upcoming Sessions", value: appointments.length.toString(), icon: "📅" },
     { label: "Total Earnings", value: "$450", icon: "💰" },
     { label: "Students Met", value: "12", icon: "👥" },
     { label: "Rating", value: "4.9", icon: "⭐" },
-  ];
-
-  const upcomingSessions = [
-    { id: 1, student: "John Doe", subject: user?.subject || "Maths", time: "Today, 7 PM", status: "Confirmed" },
   ];
 
   return (
@@ -105,32 +135,54 @@ const TeachersDisplay = () => {
               id="subjectInput"
               defaultValue={user?.subject || ""}
             />
-            <select id="timeInput">
-              <option value="9:00 AM">9:00 AM</option>
-              <option value="10:00 AM">10:00 AM</option>
-              <option value="11:00 AM">11:00 AM</option>
-              <option value="12:00 PM">12:00 PM</option>
-              <option value="1:00 PM">1:00 PM</option>
-              <option value="2:00 PM">2:00 PM</option>
-              <option value="3:00 PM">3:00 PM</option>
-              <option value="4:00 PM">4:00 PM</option>
-              <option value="5:00 PM">5:00 PM</option>
-              <option value="6:00 PM">6:00 PM</option>
-              <option value="7:00 PM">7:00 PM</option>
-              <option value="8:00 PM">8:00 PM</option>
-            </select>
+
+            <div className="time-range-inputs" style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <select id="fromTime">
+                <option value="">From</option>
+                {["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM"].map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+              <span>to</span>
+              <select id="toTime">
+                <option value="">To</option>
+                {["10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM"].map(t => (
+                  <option key={t} value={t}>{t}</option>
+                ))}
+              </select>
+            </div>
+
             <button
               className="btn-primary"
               disabled={loading}
               onClick={() => {
                 const subj = document.getElementById('subjectInput').value;
-                const time = document.getElementById('timeInput').value;
+                const start = document.getElementById('fromTime').value;
+                const end = document.getElementById('toTime').value;
+
                 if (!subj) return alert("Enter a subject");
+                if (!start || !end) return alert("Select both Start and End time");
                 if (!user || !user._id) return alert("Please login again to add slots.");
-                handleAvailability('add', time, subj);
+
+                // Generate Slots Logic
+                const times = ["9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM"];
+                const startIndex = times.indexOf(start);
+                const endIndex = times.indexOf(end);
+
+                if (startIndex === -1 || endIndex === -1 || startIndex >= endIndex) {
+                  return alert("Invalid Time Range (Start must be before End)");
+                }
+
+                // Slice the array to get range (e.g. 5pm to 8pm -> [5pm, 6pm, 7pm])
+                // Note: If user selects 5 to 9, they likely mean sessions at 5,6,7,8. 
+                // So we allow up to endIndex - 1 if we treat 'end' as closing time.
+                // Let's assume inclusive start, exclusive end for sessions.
+                const selectedSlots = times.slice(startIndex, endIndex);
+
+                handleAvailability('add', selectedSlots, subj);
               }}
             >
-              {loading ? "Saving..." : "+ Add Slot"}
+              {loading ? "Generating..." : "+ Add Range"}
             </button>
           </div>
 
@@ -173,15 +225,21 @@ const TeachersDisplay = () => {
                 </tr>
               </thead>
               <tbody>
-                {upcomingSessions.map((session) => (
-                  <tr key={session.id}>
-                    <td><span className="course-title-cell">{session.student}</span></td>
-                    <td>{session.subject}</td>
-                    <td>{session.time}</td>
-                    <td><span className="status-badge active">{session.status}</span></td>
-                    <td><button className="btn-secondary btn-sm">Join Call</button></td>
+                {appointments.length > 0 ? (
+                  appointments.map((session) => (
+                    <tr key={session._id}>
+                      <td><span className="course-title-cell">{session.studentId?.name || "Student"}</span></td>
+                      <td>{user?.subject || "Session"}</td>
+                      <td>{session.timeSlot}</td>
+                      <td><span className="status-badge active">{session.status || "Confirmed"}</span></td>
+                      <td><button className="btn-secondary btn-sm">Join Call</button></td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" style={{ textAlign: 'center', padding: '20px', color: '#666' }}>No upcoming sessions yet.</td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>

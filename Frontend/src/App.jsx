@@ -13,6 +13,7 @@ import TeacherDetailsById from './components/TeacherDetailsById/TeacherDetailsBy
 import AirDrawStudent from './components/AirDraw/AirDrawStudent'
 import AirDrawTeacher from './components/AirDraw/AirDrawTeacher'
 import Payment from './pages/Payment/Payment'
+import Classroom from './pages/Classroom/Classroom'
 
 const App = () => {
   const [login, setLogin] = useState(false)
@@ -40,6 +41,7 @@ const App = () => {
 
         <Route path="/teacher/airdraw/:roomId" element={<AirDrawTeacher />} />
         <Route path="/student/airdraw/:roomId" element={<AirDrawStudent />} />
+        <Route path="/classroom/:roomId" element={<Classroom />} />
         <Route path="/payment" element={<Payment />} />
       </Routes>
 

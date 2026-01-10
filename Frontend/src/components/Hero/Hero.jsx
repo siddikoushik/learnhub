@@ -2,6 +2,7 @@ import React from "react";
 import "./Hero.css";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import logoHero from "../../assets/logo_full_centered.png"; // Import new full logo
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -56,9 +57,9 @@ const Hero = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2 }}
         >
-          <div className="decorative-circle"></div>
-
-
+          <div className="decorative-circle">
+            <img src={logoHero} alt="LearnHub Logo" className="hero-logo-img" />
+          </div>
         </motion.div>
 
       </div>

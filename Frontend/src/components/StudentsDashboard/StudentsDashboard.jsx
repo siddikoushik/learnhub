@@ -5,11 +5,27 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 const StudentsDashboard = () => {
-  const { url, user } = useContext(AuthContext);
+  const { url, user, setLogin } = useContext(AuthContext); // Get setLogin to trigger modal
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedTutorId, setExpandedTutorId] = useState(null);
+
+  // Redirect if not logged in
+  useEffect(() => {
+    // Small timeout to allow Context to restore user from localStorage
+    const timer = setTimeout(() => {
+      if (!user) {
+        alert("You must be logged in to view the dashboard.");
+        navigate('/');
+        // If setLogin is available in context (it's passed to Navbar but maybe not Context value?)
+        // setLogin(true); 
+        // Checking AuthContext value... passed props might not be in value.
+        // Let's just redirect for now.
+      }
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [user, navigate]);
 
   // Real Tutors Data from API
   const [availableTutors, setAvailableTutors] = useState([]);
@@ -67,7 +83,28 @@ const StudentsDashboard = () => {
       const res = await fetch(`${url}/api/booking/student/${user._id}`);
       const data = await res.json();
       if (data.success) {
-        setAppointments(data.bookings);
+        // 1. Deduplicate bookings by Time Slot + Teacher to clean up legacy double-bookings
+        // (Assuming user only wants to see one confirmed slot per time regardless if they essentially double booked)
+        // Or strictly unique by timeSlot if they can't be in two places at once.
+        // DEBUG: Check what we received
+        console.log("DEBUG: Raw Bookings:", data.bookings);
+
+        const uniqueBookings = [];
+        const seen = new Set();
+
+        // Show all sessions found in DB (filtered by ID), but deduplicate time/teacher combos
+
+        data.bookings.forEach(b => {
+          const key = `${b.timeSlot}-${b.teacherId?._id}`;
+          console.log(`Processing ${key}`, b);
+          if (!seen.has(key)) {
+            seen.add(key);
+            uniqueBookings.push(b);
+          }
+        });
+
+        console.log("DEBUG: Unique Bookings:", uniqueBookings);
+        setAppointments(uniqueBookings);
       }
     } catch (error) {
       console.error("Error fetching bookings:", error);
@@ -117,8 +154,13 @@ const StudentsDashboard = () => {
     if (slot.status === 'booked') return;
 
     // Use Mock Logic if User ID is missing (Demo Mode) or if tutor is Mock 101/102
+    // DEBUG: Log why it might fail
     if (!user || !user._id || tutor._id.length < 5) { // Simple check for mock IDs
-      console.log("Processing Mock Payment redirection...");
+      console.log("Processing Mock Payment redirection...", {
+        hasUser: !!user,
+        userId: user?._id,
+        tutorId: tutor._id
+      });
       navigate('/payment');
       return;
     }
@@ -274,7 +316,16 @@ const StudentsDashboard = () => {
                     <div className="time-badge">{item.timeSlot}</div>
                     <div className="event-info">
                       <h4>{item.teacherId?.subject || "Session"} w/ {item.teacherId?.name || "Tutor"}</h4>
-                      <span className="tag">Confirmed</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '5px' }}>
+                        <span className="tag">Confirmed</span>
+                        <button
+                          className="btn-primary btn-sm"
+                          style={{ padding: '2px 8px', fontSize: '0.8rem' }}
+                          onClick={() => navigate(`/classroom/${item._id}`)}
+                        >
+                          Join
+                        </button>
+                      </div>
                     </div>
                   </li>
                 ))

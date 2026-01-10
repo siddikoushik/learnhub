@@ -30,9 +30,19 @@ const TeachersDisplay = () => {
     try {
       const res = await axios.get(`${url}/api/booking/teacher/${user._id}`);
       if (res.data.success) {
-        // Filter only CONFIRMED sessions
-        const confirmedSessions = res.data.bookings.filter(b => b.status === 'Confirmed');
-        setAppointments(confirmedSessions);
+        // 1. DEDUPLICATE ALL SESSIONS (Show everything to fix "Not Working" issue)
+        // Ensure we handle status display in UI instead of filtering data out entirely
+        const uniqueSessions = [];
+        const seenTimes = new Set();
+
+        res.data.bookings.forEach(session => {
+          if (!seenTimes.has(session.timeSlot)) {
+            seenTimes.add(session.timeSlot);
+            uniqueSessions.push(session);
+          }
+        });
+
+        setAppointments(uniqueSessions);
       }
     } catch (error) {
       console.error("Error fetching bookings:", error);
@@ -98,6 +108,27 @@ const TeachersDisplay = () => {
     { label: "Students Met", value: "12", icon: "👥" },
     { label: "Rating", value: "4.9", icon: "⭐" },
   ];
+
+  const cancelBooking = async (bookingId) => {
+    if (!window.confirm("Are you sure you want to cancel this session?")) return;
+
+    try {
+      const { data } = await axios.delete(`${url}/api/booking/${bookingId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (data.success) {
+        alert("Session Cancelled");
+        fetchBookings(); // Refresh list
+        fetchProfile(); // Refresh slots (avail changes)
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      console.error("Cancellation Error:", error);
+      alert("Failed to cancel session");
+    }
+  };
 
   return (
     <motion.div
@@ -232,7 +263,24 @@ const TeachersDisplay = () => {
                       <td>{user?.subject || "Session"}</td>
                       <td>{session.timeSlot}</td>
                       <td><span className="status-badge active">{session.status || "Confirmed"}</span></td>
-                      <td><button className="btn-secondary btn-sm">Join Call</button></td>
+                      <td>
+                        <button
+                          className="btn-secondary btn-sm"
+                          style={{ marginRight: '10px' }}
+                          onClick={() => navigate(`/classroom/${session._id}`, {
+                            state: { studentId: session.studentId?._id }
+                          })}
+                        >
+                          Join Call
+                        </button>
+                        <button
+                          className="btn-secondary btn-sm"
+                          style={{ background: '#ef4444', color: 'white', border: 'none' }}
+                          onClick={() => cancelBooking(session._id)}
+                        >
+                          Cancel
+                        </button>
+                      </td>
                     </tr>
                   ))
                 ) : (

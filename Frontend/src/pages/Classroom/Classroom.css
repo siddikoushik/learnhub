@@ -1,0 +1,121 @@
+.classroom-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: #0f172a;
+    /* Dark Classroom Theme */
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.video-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    gap: 10px;
+    width: 100%;
+    height: calc(100vh - 100px);
+    /* Leave space for controls */
+}
+
+.video-card {
+    background: #1e293b;
+    border-radius: 16px;
+    overflow: hidden;
+    flex: 1;
+    /* Grow to fill space */
+    min-width: 45%;
+    /* Ensure side-by-side */
+    height: 100%;
+    /* Fill height */
+    max-height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    border: 2px solid #334155;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+.user-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Cover full area */
+}
+
+.video-label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.6);
+    padding: 10px;
+    margin: 0;
+    text-align: center;
+    font-weight: bold;
+}
+
+.controls-bar {
+    height: 80px;
+    background: #1e293b;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+    border: 1px solid #334155;
+}
+
+/* Inherit Global Button Styles but make them fit dark mode */
+.btn-icon {
+    background: #334155;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.btn-icon:hover {
+    background: #475569;
+}
+
+.btn-icon.danger {
+    background: #ef4444;
+}
+
+.btn-icon.danger:hover {
+    background: #dc2626;
+}
+
+.incoming-call-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #22c55e;
+    padding: 15px 30px;
+    border-radius: 50px;
+    box-shadow: 0 10px 25px rgba(34, 197, 94, 0.4);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    z-index: 1000;
+    animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        top: -100px;
+    }
+
+    to {
+        top: 20px;
+    }
+}

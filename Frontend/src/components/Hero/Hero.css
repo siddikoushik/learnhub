@@ -154,15 +154,48 @@
 }
 
 .decorative-circle {
-  position: absolute;
-  width: 300px;
-  height: 300px;
+  position: relative;
+  width: 580px;
+  /* Slightly larger container */
+  height: 580px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border-radius: 50%;
-  background: linear-gradient(135deg, #dbeafe 0%, transparent 70%);
-  top: -40px;
-  right: -40px;
-  z-index: 1;
-  opacity: 0.5;
+  /* Force circle */
+  background: white;
+  /* Clean white background like reference */
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+  /* Deeper shadow */
+  animation: float 6s ease-in-out infinite;
+  border: 8px solid rgba(255, 255, 255, 0.5);
+  /* Thicker glass border */
+  overflow: hidden;
+  /* Clip everything to circle */
+}
+
+.hero-logo-img {
+  width: 100%;
+  /* Fill the circle */
+  height: 100%;
+  object-fit: cover;
+  /* or contain, depending on image */
+  border-radius: 50%;
+  /* Ensure image is also circular */
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 @media (max-width: 900px) {

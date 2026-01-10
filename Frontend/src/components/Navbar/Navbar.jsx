@@ -1,13 +1,17 @@
-import React, { useContext, useState } from "react";
-import "./Navbar.css";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
-import { assets } from "../../assets/frontendImages";
+import React, { useContext, useState } from 'react';
+import './Navbar.css';
+import { assets } from '../../assets/frontendImages'; // Corrected import
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
+import socket from '../../socket';
+import logoHeader from "../../assets/logo_header.png"; // Import new header logo
 
 const Navbar = ({ setLogin }) => {
   const { token, setToken, user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
+  const [notifications, setNotifications] = useState([]); // List of notifications
+  const [showNotifications, setShowNotifications] = useState(false); // Toggle dropdown
 
   const logout = () => {
     localStorage.removeItem("token");
@@ -15,11 +19,45 @@ const Navbar = ({ setLogin }) => {
     navigate("/");
   };
 
+  // Socket Setup & Notification Listener
+  React.useEffect(() => {
+    if (user && user._id) {
+      socket.emit("setup", user); // Join User Room
+    }
+
+    socket.on("class-started", (data) => {
+      console.log("🔔 Class Started Notification:", data);
+      // Add new notification to list
+      const newNotif = {
+        id: Date.now(),
+        type: 'class-started',
+        message: `Class with ${data.teacherName} has started!`,
+        data: data,
+        timestamp: new Date().toLocaleTimeString(),
+        read: false
+      };
+      setNotifications(prev => [newNotif, ...prev]);
+    });
+
+    return () => {
+      socket.off("class-started");
+    };
+  }, [user]);
+
+  const handleNotificationClick = (notif) => {
+    if (notif.type === 'class-started') {
+      navigate(`/classroom/${notif.data.roomId}`);
+      setShowNotifications(false);
+    }
+    // Mark as read or remove? Let's remove for now or keep as history
+    // setNotifications(prev => prev.filter(n => n.id !== notif.id));
+  };
+
   return (
     <nav className="nav-wrapper">
       {/* LOGO */}
       <div className="nav-logo" onClick={() => navigate("/")}>
-        <img src="/image.png" alt="logo" />
+        <img src={logoHeader} alt="logo" />
       </div>
 
       {/* MENU */}
@@ -59,14 +97,40 @@ const Navbar = ({ setLogin }) => {
         }}>Contact</li>
       </ul>
 
-      {/* NOTIFICATION */}
-      <div className="nav-notification">
-        <img src={assets.notification} alt="notification" />
-        <span className="nav-dot" />
-      </div>
-
-      {/* AUTH / PROFILE */}
+      {/* AUTH / PROFILE & NOTIFICATION */}
       <div className="nav-auth">
+
+        {/* NOTIFICATION (Now inside Auth group to be near profile) */}
+        <div className="nav-notification" onClick={() => setShowNotifications(!showNotifications)}>
+          <img src={assets.notification} alt="notification" />
+          {notifications.length > 0 && <span className="nav-dot" style={{ display: 'block' }} />}
+
+          {/* Notification Dropdown */}
+          {showNotifications && (
+            <div className="notification-dropdown">
+              <div className="notif-header">Notifications</div>
+              <ul className="notif-list">
+                {notifications.length > 0 ? (
+                  notifications.map(notif => (
+                    <li key={notif.id} className="notif-item" onClick={(e) => {
+                      e.stopPropagation(); // Prevent closing immediately
+                      handleNotificationClick(notif);
+                    }}>
+                      <div className="notif-content">
+                        <p className="notif-msg">{notif.message}</p>
+                        <span className="notif-time">{notif.timestamp}</span>
+                      </div>
+                      {notif.type === 'class-started' && <span className="notif-action">Join</span>}
+                    </li>
+                  ))
+                ) : (
+                  <li className="notif-empty">No new notifications</li>
+                )}
+              </ul>
+            </div>
+          )}
+        </div>
+
         {!token ? (
           <button className="nav-auth-btn" onClick={() => setLogin(true)}>
             SignUp

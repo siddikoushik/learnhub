@@ -22,8 +22,6 @@ const Classroom = () => {
     const [callEnded, setCallEnded] = useState(false);
     const [name, setName] = useState("");
     const [isScreenSharing, setIsScreenSharing] = useState(false);
-    const [name, setName] = useState("");
-    const [isScreenSharing, setIsScreenSharing] = useState(false);
     const [isFullScreen, setIsFullScreen] = useState(false); // Remote Fullscreen
     const [isLocalFullScreen, setIsLocalFullScreen] = useState(false); // Local Fullscreen
 

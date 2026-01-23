@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar/Navbar'
 import Home from './pages/Home/Home'
 import Footer from './components/Footer/Footer'
@@ -15,14 +15,17 @@ import AirDrawTeacher from './components/AirDraw/AirDrawTeacher'
 import Payment from './pages/Payment/Payment'
 import Classroom from './pages/Classroom/Classroom'
 
-const App = () => {
+const AppContent = () => {
+  const location = useLocation();
+  const isClassroom = location.pathname.startsWith('/classroom');
+
   const [login, setLogin] = useState(false)
   const [techpro, setTechpro] = useState(false)
+
   return (
     <div>
       {login && (<Auth setLogin={setLogin} />)} {/* Render Global Auth */}
-      <Navbar login={login} setLogin={setLogin} />
-
+      {!isClassroom && <Navbar login={login} setLogin={setLogin} />}
 
       <Routes>
         <Route path='/' element={<Home login={login} setLogin={setLogin} techpro={techpro} setTechpro={setTechpro} />} />
@@ -47,8 +50,16 @@ const App = () => {
         <Route path="/payment" element={<Payment />} />
       </Routes>
 
-      <Footer />
+      {!isClassroom && <Footer />}
     </div>
+  )
+}
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   )
 }
 

@@ -22,7 +22,10 @@ const Classroom = () => {
     const [callEnded, setCallEnded] = useState(false);
     const [name, setName] = useState("");
     const [isScreenSharing, setIsScreenSharing] = useState(false);
-    const [isFullScreen, setIsFullScreen] = useState(false);
+    const [name, setName] = useState("");
+    const [isScreenSharing, setIsScreenSharing] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(false); // Remote Fullscreen
+    const [isLocalFullScreen, setIsLocalFullScreen] = useState(false); // Local Fullscreen
 
     const myVideo = useRef();
     const userVideo = useRef();
@@ -133,7 +136,10 @@ const Classroom = () => {
         if (stream) {
             stream.getTracks().forEach(track => track.stop());
         }
-        window.location.reload(); // Simple reload to clear state or navigate back
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+        }
+        navigate(-1); // Go back to dashboard instead of reload
     };
 
     // Screen Share Logic
@@ -207,9 +213,15 @@ const Classroom = () => {
         <div className="classroom-container">
             <div className="video-grid">
                 {/* My Video */}
-                <div className="video-card">
+                <div className={`video-card ${isLocalFullScreen ? 'fullscreen' : ''}`}>
                     <video playsInline muted ref={myVideo} autoPlay className="user-video" />
                     <p className="video-label">You</p>
+                    <button
+                        className="btn-icon expand-btn"
+                        onClick={() => setIsLocalFullScreen(!isLocalFullScreen)}
+                    >
+                        {isLocalFullScreen ? "↘️" : "↗️"}
+                    </button>
                 </div>
 
                 {/* Remote Video */}

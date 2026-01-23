@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext, useState, useEffect } from "react";
 import "./Hero.css";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import logoHero from "../../assets/logo_full_centered.png"; // Import new full logo
+import logoHero from "../../assets/logo_full_centered.png";
+import { AuthContext } from "../../context/AuthContext";
 
 const CountUp = ({ end, duration, suffix = "", isFloat = false }) => {
   const [count, setCount] = React.useState(0);
@@ -33,6 +34,24 @@ const CountUp = ({ end, duration, suffix = "", isFloat = false }) => {
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { url } = useContext(AuthContext); // Access API URL
+  const [stats, setStats] = useState({ students: 0, teachers: 0, rating: 0 });
+
+  // Fetch Stats dynamically
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await fetch(`${url}/api/user/stats`);
+        const data = await res.json();
+        if (data.success) {
+          setStats(data.stats);
+        }
+      } catch (error) {
+        console.error("Failed to fetch stats", error);
+      }
+    };
+    fetchStats();
+  }, [url]);
 
   return (
     <section className="hero-section">

@@ -10,9 +10,9 @@ const About = () => {
   ];
 
   const testimonials = [
-    { name: "Alex Johnson", role: "Software Engineer", comment: "LearnHub helped me switch careers from sales to tech in just 6 months!", image: "https://i.pravatar.cc/100?img=11" },
-    { name: "Sarah Lee", role: "Product Designer", comment: "The mentorship I received here was invaluable. Highly recommended!", image: "https://i.pravatar.cc/100?img=5" },
-    { name: "David Kim", role: "Data Scientist", comment: "Best platform for deep diving into detailed technical topics.", image: "https://i.pravatar.cc/100?img=3" },
+    { name: "Rahul Verma", role: "Computer Science Student", comment: "The interactive whiteboard made learning Algorithms so much easier. My tutor was fantastic!", image: "https://randomuser.me/api/portraits/men/32.jpg" },
+    { name: "Emily Blunt", role: "Math Tutor", comment: "LearnHub connects me with motivated students. The scheduling tools are a lifesaver.", image: "https://randomuser.me/api/portraits/women/44.jpg" },
+    { name: "James Carter", role: "Career Switcher", comment: "I went from zero coding knowledge to a Junior Dev role thanks to the mentorship here.", image: "https://randomuser.me/api/portraits/men/85.jpg" },
   ];
 
   return (

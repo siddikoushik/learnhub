@@ -10,9 +10,9 @@ const About = () => {
   ];
 
   const testimonials = [
-    { name: "Rahul Verma", role: "Computer Science Student", comment: "The interactive whiteboard made learning Algorithms so much easier. My tutor was fantastic!", image: "https://randomuser.me/api/portraits/men/32.jpg" },
-    { name: "Emily Blunt", role: "Math Tutor", comment: "LearnHub connects me with motivated students. The scheduling tools are a lifesaver.", image: "https://randomuser.me/api/portraits/women/44.jpg" },
-    { name: "James Carter", role: "Career Switcher", comment: "I went from zero coding knowledge to a Junior Dev role thanks to the mentorship here.", image: "https://randomuser.me/api/portraits/men/85.jpg" },
+    { name: "Rahul Verma", role: "Computer Science Student", comment: "The interactive whiteboard made learning Algorithms so much easier. My tutor was fantastic!", image: "https://randomuser.me/api/portraits/men/15.jpg" },
+    { name: "Emily Blunt", role: "Math Tutor", comment: "LearnHub connects me with motivated students. The scheduling tools are a lifesaver.", image: "https://randomuser.me/api/portraits/women/42.jpg" },
+    { name: "James Carter", role: "Career Switcher", comment: "I went from zero coding knowledge to a Junior Dev role thanks to the mentorship here.", image: "https://randomuser.me/api/portraits/men/22.jpg" },
   ];
 
   return (

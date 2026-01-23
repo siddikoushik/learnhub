@@ -259,11 +259,11 @@ const TeachersDisplay = () => {
                 {appointments.length > 0 ? (
                   appointments.map((session) => (
                     <tr key={session._id}>
-                      <td><span className="course-title-cell">{session.studentId?.name || "Student"}</span></td>
-                      <td>{user?.subject || "Session"}</td>
-                      <td>{session.timeSlot}</td>
-                      <td><span className="status-badge active">{session.status || "Confirmed"}</span></td>
-                      <td>
+                      <td data-label="Student Name"><span className="course-title-cell">{session.studentId?.name || "Student"}</span></td>
+                      <td data-label="Subject">{user?.subject || "Session"}</td>
+                      <td data-label="Time">{session.timeSlot}</td>
+                      <td data-label="Status"><span className="status-badge active">{session.status || "Confirmed"}</span></td>
+                      <td data-label="Action">
                         <button
                           className="btn-secondary btn-sm"
                           style={{ marginRight: '10px' }}

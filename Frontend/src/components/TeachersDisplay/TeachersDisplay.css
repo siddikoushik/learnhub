@@ -153,10 +153,57 @@ font-size: 14px;
   margin: 0 auto 12px;
 }
 
-.dashboard-grid-teacher {
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 32px;
+gap: 32px;
+}
+
+@media (max-width: 600px) {
+  .courses-table thead {
+    display: none;
+    /* Hide headers */
+  }
+
+  .courses-table,
+  .courses-table tbody,
+  .courses-table tr,
+  .courses-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .courses-table tr {
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-light);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  .courses-table td {
+    padding: 8px 0;
+    text-align: right;
+    position: relative;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .courses-table td::before {
+    content: attr(data-label);
+    /* Use data-label for headers */
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 13px;
+    text-align: left;
+  }
+
+  .courses-table td:last-child {
+    border-bottom: none;
+    padding-top: 16px;
+    justify-content: flex-end;
+    gap: 10px;
+  }
 }
 
 .table-card {

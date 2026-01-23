@@ -100,6 +100,23 @@ const Navbar = ({ setLogin }) => {
           }, 100);
           setMobileMenuOpen(false);
         }}>Contact</li>
+
+        {/* Mobile Only: Auth Links */}
+        <div className="mobile-auth-links">
+          {!token ? (
+            <li onClick={() => { setLogin(true); setMobileMenuOpen(false); }}>Sign Up / Login</li>
+          ) : (
+            <>
+              <li onClick={() => { navigate("/profile"); setMobileMenuOpen(false); }}>My Profile</li>
+              <li onClick={() => {
+                localStorage.removeItem("token");
+                setToken("");
+                navigate("/");
+                setMobileMenuOpen(false);
+              }}>Logout</li>
+            </>
+          )}
+        </div>
       </ul>
 
       {/* HAMBURGER ICON */}

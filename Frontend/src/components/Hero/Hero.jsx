@@ -4,6 +4,33 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import logoHero from "../../assets/logo_full_centered.png"; // Import new full logo
 
+const CountUp = ({ end, duration, suffix = "", isFloat = false }) => {
+  const [count, setCount] = React.useState(0);
+
+  React.useEffect(() => {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+
+      const currentVal = progress * end;
+      setCount(currentVal);
+
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
+  }, [end, duration]);
+
+  return (
+    <span>
+      {isFloat ? count.toFixed(1) : Math.floor(count).toLocaleString()}
+      {suffix}
+    </span>
+  );
+};
+
 const Hero = () => {
   const navigate = useNavigate();
 
@@ -36,15 +63,15 @@ const Hero = () => {
 
           <div className="stats-row">
             <div className="stat-item">
-              <h3>10k+</h3>
+              <h3><CountUp end={10000} duration={2000} suffix="+" /></h3>
               <p>Active Students</p>
             </div>
             <div className="stat-item">
-              <h3>500+</h3>
+              <h3><CountUp end={500} duration={2000} suffix="+" /></h3>
               <p>Expert Tutors</p>
             </div>
             <div className="stat-item">
-              <h3>4.9</h3>
+              <h3><CountUp end={4.9} duration={2000} isFloat /></h3>
               <p>User Rating</p>
             </div>
           </div>

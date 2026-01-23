@@ -7,6 +7,8 @@
     color: white;
     padding: 20px;
     box-sizing: border-box;
+    position: relative;
+    /* For absolute positioning of action bar */
 }
 
 .video-grid {
@@ -16,7 +18,7 @@
     flex-grow: 1;
     gap: 10px;
     width: 100%;
-    height: calc(100vh - 100px);
+    height: calc(100vh - 120px);
     /* Leave space for controls */
 }
 
@@ -90,57 +92,104 @@
     font-weight: bold;
 }
 
-.controls-bar {
-    margin-top: 20px;
-    border: 1px solid #334155;
-    /* Allow wrapping on small screens */
-    flex-wrap: wrap;
-    padding: 10px;
-    height: auto;
-    min-height: 80px;
+/* --- NEW CONTROLS LAYOUT --- */
+
+/* Action Bar (Start Class / Join) */
+.action-bar {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    z-index: 100;
+    position: absolute;
+    bottom: 100px;
+    /* Sit right above the controls bar */
+    left: 0;
+    pointer-events: none;
+    /* Let clicks pass through if empty */
 }
 
-/* Inherit Global Button Styles but make them fit dark mode */
-.btn-icon {
-    background: #334155;
+.action-bar>* {
+    pointer-events: auto;
+    /* Re-enable clicks for buttons */
+}
+
+.start-btn {
+    width: 90%;
+    max-width: 350px;
+    padding: 14px;
+    font-size: 16px;
+    border-radius: 30px;
+    /* Pill shape */
+    background: #2563eb;
     color: white;
     border: none;
-    padding: 12px 20px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s;
+    font-weight: bold;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.4);
+    animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-@media (max-width: 600px) {
-    .btn-icon {
-        padding: 8px 12px;
-        font-size: 12px;
-        border-radius: 8px;
+@keyframes bounceIn {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
     }
 
-    .controls-bar {
-        gap: 10px;
+    to {
+        transform: scale(1);
+        opacity: 1;
     }
+}
+
+.controls-bar {
+    height: 90px;
+    background: #1e293b;
+    border-top: 1px solid #334155;
+    display: flex;
+    justify-content: space-around;
+    /* Spread icons evenly */
+    align-items: center;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 50;
+    padding-bottom: 20px;
+    /* Space for home indicator on iOS */
+    padding-top: 10px;
+}
+
+/* Button & Labels */
+.btn-icon {
+    background: transparent;
+    color: #94a3b8;
+    border: none;
+    padding: 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 60px;
 }
 
 .btn-icon:hover {
-    background: #475569;
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
 }
 
 .btn-icon.danger {
-    background: #ef4444;
+    color: #ef4444;
 }
 
-.btn-icon.danger:hover {
-    background: #dc2626;
+.btn-label {
+    font-size: 11px;
+    margin-top: 4px;
 }
 
+/* Incoming Call Alert */
 .incoming-call-alert {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
     background: #22c55e;
     padding: 15px 30px;
     border-radius: 50px;
@@ -148,18 +197,7 @@
     display: flex;
     gap: 20px;
     align-items: center;
-    z-index: 1000;
-    animation: slideDown 0.5s ease-out;
-}
-
-@keyframes slideDown {
-    from {
-        top: -100px;
-    }
-
-    to {
-        top: 20px;
-    }
+    pointer-events: auto;
 }
 
 /* Full Screen Mode */
@@ -190,6 +228,28 @@
     cursor: pointer;
 }
 
-.expand-btn:hover {
-    background: rgba(0, 0, 0, 0.8);
+/* On Desktop, make controls bar normalized */
+@media (min-width: 601px) {
+    .controls-bar {
+        position: static;
+        width: 100%;
+        border-radius: 16px;
+        margin-top: 20px;
+        padding: 20px;
+        height: auto;
+        justify-content: center;
+        gap: 20px;
+        background: #1e293b;
+        border: 1px solid #334155;
+    }
+
+    .action-bar {
+        position: static;
+        margin-top: 20px;
+    }
+
+    .start-btn {
+        width: auto;
+        padding: 12px 30px;
+    }
 }

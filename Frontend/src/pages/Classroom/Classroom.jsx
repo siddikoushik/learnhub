@@ -241,63 +241,53 @@ const Classroom = () => {
                 )}
             </div>
 
+            {/* CALL ACTIONS (Start / Join) - Separate from Media Controls to avoid clutter */}
+            {(!callAccepted && !callEnded) && (
+                <div className="action-bar">
+                    {receivingCall && !callAccepted ? (
+                        <div className="incoming-call-alert">
+                            <p>{name} is ready!</p>
+                            <button className="btn-primary" onClick={answerCall}>Join Class</button>
+                        </div>
+                    ) : null}
+
+                    {/* Only Teacher sees Start Class */}
+                    {!receivingCall && user?.role === 'teacher' && (
+                        <button className="btn-primary start-btn" onClick={() => {
+                            callUser();
+                            socket.emit("notify-start", {
+                                roomId,
+                                studentId: studentId || studentIdFromState,
+                                teacherName: user?.name,
+                                startTime: new Date().toLocaleTimeString()
+                            });
+                            alert("Class Started! Student has been notified.");
+                        }}>
+                            Start Class (Notify Student)
+                        </button>
+                    )}
+                </div>
+            )}
+
             <div className="controls-bar">
-                {/* Call Controls Needed? */}
-                {/* Simplified: Auto-join room. 
-                    But simple-peer is p2p. One must "call" the other.
-                    Let's add a "Start Class" button for Teacher?
-                    Or just a "Join Now" if notification received? 
-                */}
-
-                {receivingCall && !callAccepted ? (
-                    <div className="incoming-call-alert">
-                        <p>{name} is ready!</p>
-                        <button className="btn-primary" onClick={answerCall}>Join Class</button>
-                    </div>
-                ) : null}
-
-                {/* If I am first, I might need to wait or "Call"?.
-                    Let's assume Teacher initiates.
-                    Or keep it simple: "Ready to Start?" -> Call Everyone in Room (Broadcast)
-                */}
-
-                {/* Only Teacher sees Start Class */}
-                {!callAccepted && !receivingCall && user?.role === 'teacher' && (
-                    <button className="btn-primary" onClick={() => {
-                        // 1. Actually Start Call (WebRTC Peer)
-                        callUser();
-
-                        // 2. Notify Student (Send event to room/backend to alert student dashboard)
-                        socket.emit("notify-start", {
-                            roomId,
-                            studentId: studentId || studentIdFromState, // Prefer DB fetch, fallback to state
-                            teacherName: user?.name,
-                            startTime: new Date().toLocaleTimeString()
-                        });
-                        alert("Class Started! Student has been notified.");
-                    }}>
-                        Start Class (Notify Student)
-                    </button>
-                )}
-
                 <button className={`btn-icon ${!micOn ? 'danger' : ''}`} onClick={toggleMic}>
-                    {micOn ? "🎙️ Mic On" : "🚫 Mic Off"}
+                    {micOn ? "🎙️" : "🚫"} <br /> <span className="btn-label">Mic</span>
                 </button>
 
                 <button className={`btn-icon ${!videoOn ? 'danger' : ''}`} onClick={toggleVideo}>
-                    {videoOn ? "📷 Video On" : "🚫 Video Off"}
+                    {videoOn ? "📷" : "🚫"} <br /> <span className="btn-label">Cam</span>
                 </button>
 
                 <button className={`btn-icon ${!speakerOn ? 'danger' : ''}`} onClick={toggleSpeaker}>
-                    {speakerOn ? "🔊 Speaker On" : "🔇 Speaker Off"}
+                    {speakerOn ? "🔊" : "🔇"} <br /> <span className="btn-label">Spkr</span>
                 </button>
 
                 <button className="btn-icon" onClick={toggleScreenShare}>
-                    {isScreenSharing ? "Stop Share" : "Share Screen"}
+                    {isScreenSharing ? "Stop" : "Share"} <br /> <span className="btn-label">Share</span>
                 </button>
 
                 <button className="btn-icon danger" onClick={leaveCall}>
-                    End Class
+                    End <br /> <span className="btn-label">Class</span>
                 </button>
             </div>
         </div>

@@ -36,7 +36,7 @@ const Contact = () => {
                             <div className="icon-box">📧</div>
                             <div className="info-text">
                                 <h4>Email</h4>
-                                <p>siddusiddu5849@gmail.com</p>
+                                <p>siddikoushik321@gmail.com</p>
                             </div>
                         </div>
 
@@ -63,6 +63,15 @@ const Contact = () => {
                     initial={{ opacity: 0, x: 20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        const name = e.target[0].value;
+                        const email = e.target[1].value;
+                        const message = e.target[2].value;
+
+                        const mailtoLink = `mailto:siddikoushik321@gmail.com?subject=Contact from ${name}&body=${message}%0D%0A%0D%0ASender Email: ${email}`;
+                        window.location.href = mailtoLink;
+                    }}
                 >
                     <div className="form-group">
                         <label>Your Name</label>

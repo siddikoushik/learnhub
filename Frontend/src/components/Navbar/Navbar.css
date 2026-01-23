@@ -1,21 +1,18 @@
 .nav-wrapper {
   width: 100%;
   height: 80px;
-  /* Shortened Header */
   padding: 0 32px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border-light);
   display: flex;
   align-items: center;
   position: fixed;
-  /* Floating Fixed Header */
   top: 0;
   left: 0;
   z-index: 1000;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-  /* Subtle shadow for floating effect */
 }
 
 /* LOGO */
@@ -27,22 +24,15 @@
 }
 
 .nav-logo img {
-  height: 60px;
-  /* Shortened Logo */
-  width: 60px;
-  /* Force square for circle */
+  height: 50px;
+  width: 50px;
   object-fit: cover;
-  /* Ensure it fills the circle */
   border-radius: 50%;
-  /* Make it circular */
-  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  transition: transform 0.3s;
 }
 
 .nav-logo:hover img {
-  transform: scale(1.1) rotate(2deg);
-  /* Cool bounce effect */
-  filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.2));
+  transform: scale(1.05);
 }
 
 /* MENU */
@@ -65,13 +55,7 @@
   color: var(--primary);
 }
 
-/* Active State (optional) */
-.nav-links li.active {
-  color: var(--primary);
-  font-weight: 600;
-}
-
-/* RIGHT SIDE */
+/* RIGHT SIDE (Profile / Auth) */
 .nav-auth {
   margin-left: auto;
   display: flex;
@@ -104,82 +88,29 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 2px solid white;
+  border: 2px solid #e2e8f0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s;
 }
 
-/* DROPDOWN */
+.nav-profile:hover img {
+  border-color: var(--primary);
+}
+
+/* UNIFIED PROFILE DROPDOWN */
 .nav-profile-menu {
   position: absolute;
-  top: 55px;
-  right: 0;
-  width: 200px;
-  background: white;
-  border: 1px solid var(--border-light);
-  border-radius: 8px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-  padding: 8px 0;
-  list-style: none;
-}
-
-.nav-profile-menu li {
-  padding: 10px 16px;
-  font-size: 14px;
-  color: var(--text-main);
-  display: flex;
-  align-items: center;
-  transition: background 0.2s;
-}
-
-.nav-profile-menu li:hover {
-  background: #f1f5f9;
-  color: var(--primary);
-}
-
-.nav-notification {
-  position: relative;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.nav-notification img {
-  width: 32px;
-  /* Bigger size */
-  height: 32px;
-  opacity: 0.8;
-  transition: transform 0.2s;
-}
-
-.nav-notification:hover img {
-  opacity: 1;
-  transform: scale(1.1);
-  /* Slight zoom on hover */
-}
-
-.nav-dot {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 8px;
-  height: 8px;
-  background-color: var(--danger, #ef4444);
-  border-radius: 50%;
-  border: 1px solid white;
-}
-
-/* Notification Dropdown */
-.notification-dropdown {
-  position: absolute;
-  top: 50px;
+  top: 60px;
   right: -10px;
   width: 280px;
+  /* Wider card */
   background: white;
   border: 1px solid var(--border-light);
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  z-index: 1001;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  padding: 0;
+  list-style: none;
+  z-index: 2000;
   overflow: hidden;
   animation: fadeIn 0.2s ease-out;
 }
@@ -196,156 +127,120 @@
   }
 }
 
-.notif-header {
-  padding: 12px 16px;
-  border-bottom: 1px solid #f1f5f9;
-  font-weight: 600;
+/* Profile Header Section */
+.profile-header {
+  padding: 20px;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.profile-initials {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #64748b;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-name {
+  font-weight: 700;
+  color: #1e293b;
+  font-size: 16px;
+  margin: 0;
+}
+
+.profile-email {
+  color: #64748b;
+  font-size: 13px;
+  margin: 4px 0 0 0;
+}
+
+/* Dividers */
+.menu-divider {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 0;
+}
+
+/* Menu List */
+.menu-list {
+  padding: 8px 0;
+  list-style: none;
+  margin: 0;
+}
+
+.menu-list li {
+  padding: 12px 20px;
   font-size: 14px;
   color: #334155;
-  background: #f8fafc;
-}
-
-.notif-list {
-  max-height: 300px;
-  overflow-y: auto;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.notif-item {
-  padding: 12px 16px;
-  border-bottom: 1px solid #f1f5f9;
   cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   transition: background 0.2s;
+  display: block;
+  /* Ensure block layout */
 }
 
-.notif-item:hover {
-  background: #f0f9ff;
+.menu-list li:hover {
+  background: #f1f5f9;
+  color: var(--primary);
 }
 
-.notif-content {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.logout-item {
+  color: #ef4444 !important;
+  font-weight: 500;
 }
 
-.notif-msg {
-  font-size: 13px;
-  color: #1e293b;
-  margin: 0;
-  line-height: 1.4;
+.logout-item:hover {
+  background: #fef2f2 !important;
 }
 
-.notif-time {
-  font-size: 11px;
-  color: #94a3b8;
+/* Visibility Utilities */
+.mobile-only {
+  display: none !important;
+  /* Hidden on desktop */
 }
 
-.notif-action {
-  font-size: 11px;
-  font-weight: 600;
-  color: #3b82f6;
-  background: #eff6ff;
-  padding: 4px 8px;
-  border-radius: 4px;
-}
-
-.notif-empty {
-  padding: 20px;
-  text-align: center;
-  font-size: 13px;
-  color: #94a3b8;
-}
-
-/* HAMBURGER */
-.nav-hamburger {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  /* Push to right */
-  margin-left: auto;
-  z-index: 2000;
-  /* Ensure strictly on top */
-  padding: 10px;
-  /* Increase Touch Area */
-}
-
-/* ... existing hamburger bar styles ... */
-
-/* Default: Hide mobile auth links */
-.mobile-auth-links {
-  display: none;
-}
-
+/* --- MOBILE RESPONSIVENESS --- */
 @media (max-width: 900px) {
-  .nav-hamburger {
-    display: flex;
-  }
 
-  /* Hide Desktop Auth/Profile on Mobile Top Bar */
-  .nav-auth {
+  /* 1. Hide Center Links */
+  .nav-links {
     display: none;
   }
 
-  .nav-hamburger .bar {
-    width: 25px;
-    height: 3px;
-    background-color: var(--text-main);
-    border-radius: 2px;
-    transition: all 0.3s ease;
-  }
-
-  /* Hamburger Animation */
-  .nav-hamburger .bar.open:nth-child(1) {
-    transform: translateY(8px) rotate(45deg);
-  }
-
-  .nav-hamburger .bar.open:nth-child(2) {
-    opacity: 0;
-  }
-
-  .nav-hamburger .bar.open:nth-child(3) {
-    transform: translateY(-8px) rotate(-45deg);
-  }
-
-  /* Hide links by default on mobile */
-  .nav-links {
-    position: fixed;
-    top: 80px;
-    left: 0;
-    width: 100%;
-    height: calc(100vh - 80px);
-    background: white;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-bottom: 80px;
-    gap: 40px;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease-in-out;
-    border-top: 1px solid var(--border-light);
-  }
-
-  .nav-links.active {
-    transform: translateX(0);
-  }
-
-  .nav-links li {
-    font-size: 20px;
-  }
-
-  .mobile-auth-links {
+  /* 2. Show Auth Section on Mobile */
+  .nav-auth {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-    width: 100%;
-    border-top: 1px solid var(--border-light);
-    padding-top: 20px;
+    /* Enable profile icon */
+    margin-left: auto;
   }
+
+  /* 3. Dropdown Adjustments for Mobile */
+  .nav-profile-menu {
+    position: fixed;
+    /* Fixed relative to screen if needed, or absolute is fine */
+    top: 70px;
+    right: 20px;
+    width: calc(100% - 40px);
+    /* Responsive width */
+    max-width: 320px;
+  }
+
+  /* 4. Show Mobile-Only Links in Dropdown */
+  .mobile-only {
+    display: block !important;
+  }
+
+  /* Hide the SignUp button on mobile header if space is tight? 
+     Actually, keep it if not logged in. */
 }

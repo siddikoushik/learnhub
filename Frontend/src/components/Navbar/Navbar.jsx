@@ -119,12 +119,6 @@ const Navbar = ({ setLogin }) => {
         </div>
       </ul>
 
-      {/* HAMBURGER ICON */}
-      <div className="nav-hamburger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-        <span className={mobileMenuOpen ? "bar open" : "bar"}></span>
-        <span className={mobileMenuOpen ? "bar open" : "bar"}></span>
-        <span className={mobileMenuOpen ? "bar open" : "bar"}></span>
-      </div>
 
       {/* AUTH / PROFILE & NOTIFICATION */}
       <div className="nav-auth">
@@ -172,14 +166,44 @@ const Navbar = ({ setLogin }) => {
             <img src={assets.profile_icon} alt="profile" />
 
             {showMenu && (
-              <ul className="nav-profile-menu">
-                <li onClick={() => navigate("/profile")}>
-                  <span>Profile</span>
-                </li>
-                <li onClick={logout}>
-                  <span>Logout</span>
-                </li>
-              </ul>
+              <div className="nav-profile-menu">
+                {/* User Header */}
+                <div className="profile-header">
+                  <div className="profile-initials">
+                    {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                  </div>
+                  <div className="profile-details">
+                    <p className="profile-name">{user?.name || "User"}</p>
+                    <p className="profile-email">{user?.email || "user@example.com"}</p>
+                  </div>
+                </div>
+
+                <hr className="menu-divider" />
+
+                <ul className="menu-list">
+                  {/* Mobile Only Navigation */}
+                  <li className="mobile-only" onClick={() => navigate("/")}>Home</li>
+                  <li className="mobile-only" onClick={() => {
+                    if (user?.role === 'teacher') navigate("/teachersmenu/dashboard");
+                    else if (user?.role === 'student') navigate("/studentsmenu/dashboard");
+                    else navigate("/studentsmenu");
+                  }}>Dashboard</li>
+
+                  {/* Standard Links */}
+                  <li onClick={() => navigate("/profile")}>
+                    <span>My Profile</span>
+                  </li>
+                  <li onClick={() => navigate("/profile")}> {/* Could be settings */}
+                    <span>Settings</span>
+                  </li>
+
+                  <hr className="menu-divider" />
+
+                  <li onClick={logout} className="logout-item">
+                    <span>Logout</span>
+                  </li>
+                </ul>
+              </div>
             )}
 
           </div>

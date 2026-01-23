@@ -270,6 +270,11 @@
 
 /* ... existing hamburger bar styles ... */
 
+/* Default: Hide mobile auth links */
+.mobile-auth-links {
+  display: none;
+}
+
 @media (max-width: 900px) {
   .nav-hamburger {
     display: flex;

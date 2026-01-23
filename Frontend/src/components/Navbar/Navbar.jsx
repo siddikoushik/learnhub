@@ -45,6 +45,28 @@ const Navbar = ({ setLogin }) => {
     };
   }, [user]);
 
+  const notificationRef = React.useRef(null);
+  const profileRef = React.useRef(null);
+
+  // Close dropdowns when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      // Close Notifications if clicked outside
+      if (notificationRef.current && !notificationRef.current.contains(event.target)) {
+        setShowNotifications(false);
+      }
+      // Close Profile Menu if clicked outside
+      if (profileRef.current && !profileRef.current.contains(event.target)) {
+        setShowMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleNotificationClick = (notif) => {
     if (notif.type === 'class-started') {
       navigate(`/classroom/${notif.data.roomId}`);
@@ -108,7 +130,11 @@ const Navbar = ({ setLogin }) => {
       <div className="nav-auth">
 
         {/* NOTIFICATION (Now inside Auth group to be near profile) */}
-        <div className="nav-notification" onClick={() => setShowNotifications(!showNotifications)}>
+        <div
+          className="nav-notification"
+          ref={notificationRef}
+          onClick={() => setShowNotifications(!showNotifications)}
+        >
           <img src={assets.notification} alt="notification" />
           {notifications.length > 0 && <span className="nav-dot" style={{ display: 'block' }} />}
 
@@ -145,6 +171,7 @@ const Navbar = ({ setLogin }) => {
         ) : (
           <div
             className="nav-profile"
+            ref={profileRef}
             onClick={() => setShowMenu(!showMenu)}
           >
             <img src={assets.profile_icon} alt="profile" />

@@ -65,27 +65,34 @@ const Contact = () => {
                     viewport={{ once: true }}
                     onSubmit={(e) => {
                         e.preventDefault();
-                        const name = e.target[0].value;
-                        const email = e.target[1].value;
-                        const message = e.target[2].value;
+                        const formData = new FormData(e.target);
+                        const name = formData.get("user_name");
+                        const email = formData.get("user_email");
+                        const message = formData.get("message");
 
-                        const mailtoLink = `mailto:siddikoushik321@gmail.com?subject=Contact from ${name}&body=${message}%0D%0A%0D%0ASender Email: ${email}`;
+                        // Construct the body properly encoded
+                        const subject = encodeURIComponent(`Contact from ${name}`);
+                        const body = encodeURIComponent(`${message}\n\nFrom: ${name} (${email})`);
+
+                        const mailtoLink = `mailto:siddikoushik321@gmail.com?subject=${subject}&body=${body}`;
+
+                        // Open the mail client
                         window.location.href = mailtoLink;
                     }}
                 >
                     <div className="form-group">
                         <label>Your Name</label>
-                        <input type="text" placeholder="John Doe" required />
+                        <input name="user_name" type="text" placeholder="John Doe" required />
                     </div>
 
                     <div className="form-group">
                         <label>Your Email</label>
-                        <input type="email" placeholder="john@example.com" required />
+                        <input name="user_email" type="email" placeholder="john@example.com" required />
                     </div>
 
                     <div className="form-group">
                         <label>Message</label>
-                        <textarea rows="5" placeholder="How can we help you?" required></textarea>
+                        <textarea name="message" rows="5" placeholder="How can we help you?" required></textarea>
                     </div>
 
                     <button type="submit" className="btn-primary w-full">Send Message</button>

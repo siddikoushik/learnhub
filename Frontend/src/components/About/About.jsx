@@ -64,14 +64,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* CTA SECTION */}
-      <section className="cta-section">
-        <div className="cta-content">
-          <h2>Ready to Start Your Journey?</h2>
-          <p>Join LearnHub today and get access to your first course for free.</p>
-          <button className="btn-primary btn-large">Get Started Now</button>
-        </div>
-      </section>
 
     </div>
   );

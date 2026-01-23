@@ -119,8 +119,9 @@ const TeachersDisplay = () => {
 
       if (data.success) {
         alert("Session Cancelled");
-        fetchBookings(); // Refresh list
-        fetchProfile(); // Refresh slots (avail changes)
+        // Optimistic Update: Remove directly from list
+        setAppointments(prev => prev.filter(appt => appt._id !== bookingId));
+        fetchProfile(); // Refresh slots availability
       } else {
         alert(data.message);
       }

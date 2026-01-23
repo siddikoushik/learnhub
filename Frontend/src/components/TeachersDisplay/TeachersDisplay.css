@@ -153,7 +153,10 @@ font-size: 14px;
   margin: 0 auto 12px;
 }
 
-gap: 32px;
+.dashboard-grid-teacher {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 32px;
 }
 
 @media (max-width: 600px) {

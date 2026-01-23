@@ -27,8 +27,10 @@ const App = () => {
       <Routes>
         <Route path='/' element={<Home login={login} setLogin={setLogin} techpro={techpro} setTechpro={setTechpro} />} />
 
-        {/* Global Profile Route */}
+        {/* Global & Nested Profile Routes */}
         <Route path='/profile' element={<Profile />} />
+        <Route path='/studentsmenu/profile' element={<Profile />} />
+        <Route path='/teachersmenu/profile' element={<Profile />} />
 
         <Route path='/studentsmenu' element={<StudentMenu />} />
         <Route path='/teachersmenu' element={<TeachersMenu />} />

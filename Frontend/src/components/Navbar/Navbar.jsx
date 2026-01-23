@@ -10,6 +10,7 @@ const Navbar = ({ setLogin }) => {
   const { token, setToken, user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // Mobile Menu State
   const [notifications, setNotifications] = useState([]); // List of notifications
   const [showNotifications, setShowNotifications] = useState(false); // Toggle dropdown
 
@@ -61,10 +62,12 @@ const Navbar = ({ setLogin }) => {
       </div>
 
       {/* MENU */}
-      <ul className="nav-links">
+      {/* MENU (Desktop + Mobile) */}
+      <ul className={`nav-links ${mobileMenuOpen ? 'active' : ''}`}>
         <li onClick={() => {
           navigate("/");
           window.scrollTo(0, 0);
+          setMobileMenuOpen(false);
         }}>Home</li>
 
         <li
@@ -74,9 +77,9 @@ const Navbar = ({ setLogin }) => {
             } else if (user?.role === 'student') {
               navigate("/studentsmenu/dashboard");
             } else {
-              // Fallback or default behavior
               navigate("/studentsmenu");
             }
+            setMobileMenuOpen(false);
           }}
         >
           Dashboard
@@ -87,6 +90,7 @@ const Navbar = ({ setLogin }) => {
           setTimeout(() => {
             document.getElementById("about")?.scrollIntoView({ behavior: "smooth" });
           }, 100);
+          setMobileMenuOpen(false);
         }}>AboutUs</li>
 
         <li onClick={() => {
@@ -94,8 +98,16 @@ const Navbar = ({ setLogin }) => {
           setTimeout(() => {
             document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
           }, 100);
+          setMobileMenuOpen(false);
         }}>Contact</li>
       </ul>
+
+      {/* HAMBURGER ICON */}
+      <div className="nav-hamburger" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+        <span className={mobileMenuOpen ? "bar open" : "bar"}></span>
+        <span className={mobileMenuOpen ? "bar open" : "bar"}></span>
+        <span className={mobileMenuOpen ? "bar open" : "bar"}></span>
+      </div>
 
       {/* AUTH / PROFILE & NOTIFICATION */}
       <div className="nav-auth">

@@ -2,38 +2,22 @@ import TeacherProfile from "../models/TeacherProfile.js";
 import UserModel from "../models/UserModel.js"; // Needed for availability
 import { generateTeacherProfile } from "../utils/generateTeacherProfile.js";
 
-// Create Teacher Profile
+// Create Teacher Profile (Legacy - Registration handles this now in UserController)
 export const createTeacherProfile = async (req, res) => {
-  try {
-    const imagePath = req.file ? `teachers/${req.file.filename}` : "";
-
-    const teacher = await TeacherProfile.create({
-      name: req.body.name,
-      email: req.body.email,
-      qualification: req.body.qualification,
-      subjects: req.body["subjects[]"],
-      experience: req.body.experience,
-      bio: req.body.bio,
-      price: req.body.price,
-      mode: req.body.mode,
-      image: imagePath,
-    });
-
-    res.status(201).json({
-      success: true,
-      message: "Teacher profile created successfully",
-      teacher,
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Failed to create teacher profile" });
-  }
+  return res.status(400).json({
+    success: false,
+    message: "Please use the Signup page to register as a teacher."
+  });
 };
 
 // Get All Teachers
 export const getAllTeachers = async (req, res) => {
   try {
-    const teachers = await TeacherProfile.find().sort({ createdAt: -1 });
+    // Queries the main User Collection where role is 'teacher'
+    const teachers = await UserModel.find({ role: "teacher" })
+      .select("-password")
+      .sort({ createdAt: -1 });
+
     res.status(200).json({ success: true, teachers });
   } catch (error) {
     res.status(500).json({ success: false, message: "Failed to fetch teachers" });
@@ -44,14 +28,13 @@ export const getAllTeachers = async (req, res) => {
 export const getTeacherById = async (req, res) => {
   try {
     const { id } = req.params;
-    const teacher = await TeacherProfile.findById(id);
 
-    if (!teacher) {
+    // Find in User collection
+    const teacher = await UserModel.findById(id).select("-password");
+
+    if (!teacher || teacher.role !== "teacher") {
       return res.status(404).json({ success: false, message: "Teacher not found" });
     }
-
-    // Optional description gen
-    // const description = await generateTeacherProfile(teacher);
 
     res.status(200).json({ success: true, teacher });
   } catch (error) {

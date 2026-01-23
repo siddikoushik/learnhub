@@ -257,8 +257,69 @@
   color: #94a3b8;
 }
 
+/* HAMBURGER */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  cursor: pointer;
+  margin-right: 16px;
+  z-index: 1002;
+}
+
+.nav-hamburger .bar {
+  width: 25px;
+  height: 3px;
+  background-color: var(--text-main);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Hamburger Animation */
+.nav-hamburger .bar.open:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.nav-hamburger .bar.open:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-hamburger .bar.open:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
 @media (max-width: 900px) {
+  .nav-hamburger {
+    display: flex;
+  }
+
+  /* Hide links by default on mobile */
   .nav-links {
-    display: none;
+    position: fixed;
+    top: 80px;
+    /* Below Navbar */
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 80px);
+    /* Full height minus navbar */
+    background: white;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 40px;
+    gap: 40px;
+    transform: translateX(-100%);
+    /* Slide out */
+    transition: transform 0.3s ease-in-out;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .nav-links.active {
+    transform: translateX(0);
+    /* Slide in */
+  }
+
+  .nav-links li {
+    font-size: 20px;
   }
 }

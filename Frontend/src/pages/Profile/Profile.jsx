@@ -171,6 +171,64 @@ const Profile = () => {
                                         />
                                     </div>
                                     <div className="form-group">
+                                        <label>Education / Qualification</label>
+                                        <input
+                                            type="text"
+                                            name="education"
+                                            className="form-control"
+                                            placeholder="e.g. B.Tech, M.Sc"
+                                            value={formData.education}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Teaching Experience (Years)</label>
+                                        <input
+                                            type="number"
+                                            name="experience"
+                                            className="form-control"
+                                            placeholder="e.g. 5"
+                                            value={formData.experience}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Hourly Price (₹)</label>
+                                        <input
+                                            type="number"
+                                            name="price"
+                                            className="form-control"
+                                            placeholder="e.g. 500"
+                                            value={formData.price}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Teaching Mode</label>
+                                        <select
+                                            name="mode"
+                                            className="form-control"
+                                            value={formData.mode}
+                                            onChange={handleChange}
+                                        >
+                                            <option>Online</option>
+                                            <option>Offline</option>
+                                            <option>Both</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group" style={{ gridColumn: '1 / -1' }}>
+                                        <label>Bio / About Me</label>
+                                        <textarea
+                                            name="bio"
+                                            className="form-control"
+                                            placeholder="Write a short bio about yourself..."
+                                            value={formData.bio}
+                                            onChange={handleChange}
+                                            rows="4"
+                                            style={{ resize: 'vertical' }}
+                                        />
+                                    </div>
+                                    <div className="form-group">
                                         <label>Well Known Topics</label>
                                         <input
                                             type="text"

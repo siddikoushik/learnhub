@@ -196,3 +196,10 @@
         grid-template-columns: 1fr;
     }
 }
+@media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .profile-header { padding: 30px 15px; }
+    .profile-name { font-size: 20px; }
+    .form-actions { flex-direction: column; gap: 10px; }
+    .btn-primary, .btn-secondary { width: 100%; }
+}

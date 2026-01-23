@@ -22,6 +22,7 @@ const Classroom = () => {
     const [callEnded, setCallEnded] = useState(false);
     const [name, setName] = useState("");
     const [isScreenSharing, setIsScreenSharing] = useState(false);
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
     const myVideo = useRef();
     const userVideo = useRef();
@@ -213,9 +214,15 @@ const Classroom = () => {
 
                 {/* Remote Video */}
                 {callAccepted && !callEnded ? (
-                    <div className="video-card">
+                    <div className={`video-card ${isFullScreen ? 'fullscreen' : ''}`}>
                         <video playsInline ref={userVideo} autoPlay className="user-video" />
                         <p className="video-label">{name || "Student"}</p>
+                        <button
+                            className="btn-icon expand-btn"
+                            onClick={() => setIsFullScreen(!isFullScreen)}
+                        >
+                            {isFullScreen ? "↘️" : "↗️"}
+                        </button>
                     </div>
                 ) : (
                     <div className="video-card placeholder">

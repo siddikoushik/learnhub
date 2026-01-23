@@ -20,6 +20,14 @@
     /* Leave space for controls */
 }
 
+@media (max-width: 600px) {
+    .video-grid {
+        flex-direction: column-reverse;
+        /* Local (1st) Bottom, Remote (2nd) Top */
+        gap: 0;
+    }
+}
+
 .video-card {
     background: #1e293b;
     border-radius: 16px;
@@ -37,6 +45,30 @@
     position: relative;
     border: 2px solid #334155;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 600px) {
+    .video-card {
+        width: 100%;
+        min-width: 100%;
+        border-radius: 0;
+        /* Full width look */
+        border-left: none;
+        border-right: none;
+    }
+
+    /* Make Remote (Top) bigger */
+    .video-card:nth-child(2) {
+        flex: 3;
+        /* Take 3/4 space */
+        border-bottom: 2px solid #334155;
+    }
+
+    /* Make Local (Bottom) smaller */
+    .video-card:nth-child(1) {
+        flex: 1;
+        /* Take 1/4 space */
+    }
 }
 
 .user-video {

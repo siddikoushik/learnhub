@@ -50,7 +50,6 @@ const AppContent = () => {
         <Route path="/payment" element={<Payment />} />
       </Routes>
 
-      {!isClassroom && <Footer />}
     </div>
   )
 }

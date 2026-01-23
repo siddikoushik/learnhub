@@ -43,10 +43,16 @@
 }
 
 .tutor-card-top {
-  padding: 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+@media (max-width: 600px) {
+  .tutor-card-top {
+    padding: 16px;
+    /* Reduced from 24px */
+  }
 }
 
 .tutor-info-left {

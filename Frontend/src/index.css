@@ -139,6 +139,13 @@ textarea:focus {
   padding: 24px;
 }
 
+@media (max-width: 600px) {
+  .card {
+    padding: 16px;
+    /* Decrease height, increase content width */
+  }
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

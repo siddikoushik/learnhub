@@ -33,9 +33,28 @@
   margin-bottom: 4px;
 }
 
-.stat-card p {
-  color: var(--text-muted);
-  font-size: 14px;
+color: var(--text-muted);
+font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .stat-card {
+    padding: 12px 14px;
+    /* Aggressive height reduction */
+    min-height: auto;
+    /* Allow box to shrink to content */
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+
+  .stat-card h3 {
+    font-size: 20px;
+  }
 }
 
 /* AVAILABILITY MGR */

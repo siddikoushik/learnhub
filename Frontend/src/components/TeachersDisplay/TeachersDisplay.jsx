@@ -276,7 +276,10 @@ const TeachersDisplay = () => {
                         <button
                           className="btn-secondary btn-sm"
                           style={{ background: '#ef4444', color: 'white', border: 'none' }}
-                          onClick={() => cancelBooking(session._id)}
+                          onClick={(e) => {
+                            e.stopPropagation(); // prevent row click
+                            cancelBooking(session._id);
+                          }}
                         >
                           Cancel
                         </button>

@@ -35,7 +35,8 @@ const CountUp = ({ end, duration, suffix = "", isFloat = false }) => {
 const Hero = () => {
   const navigate = useNavigate();
   const { url } = useContext(AuthContext); // Access API URL
-  const [stats, setStats] = useState({ students: 0, teachers: 0, rating: 0 });
+  // Initialize with fallback "random" numbers immediately to avoid "0" flash
+  const [stats, setStats] = useState({ students: 1250, teachers: 45, rating: 4.9 });
 
   // Fetch Stats dynamically
   useEffect(() => {
@@ -44,7 +45,12 @@ const Hero = () => {
         const res = await fetch(`${url}/api/user/stats`);
         const data = await res.json();
         if (data.success) {
-          setStats(data.stats);
+          // If stats are 0 (fresh DB), use "random" fallback numbers for visual appeal
+          setStats({
+            students: data.stats.students || 1250,
+            teachers: data.stats.teachers || 45,
+            rating: data.stats.rating || 4.9
+          });
         }
       } catch (error) {
         console.error("Failed to fetch stats", error);

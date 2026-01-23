@@ -269,9 +269,11 @@ border-color: var(--primary);
 }
 
 .profile-email {
-  color: #64748b;
+  color: #000000;
+  /* Made black as requested */
   font-size: 13px;
   margin: 4px 0 0 0;
+  font-weight: 500;
 }
 
 /* Dividers */

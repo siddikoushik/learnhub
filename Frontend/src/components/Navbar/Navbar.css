@@ -269,7 +269,10 @@
   cursor: pointer;
   /* Push to right */
   margin-left: auto;
-  z-index: 1002;
+  z-index: 2000;
+  /* Ensure strictly on top */
+  padding: 10px;
+  /* Increase Touch Area */
 }
 
 /* ... existing hamburger bar styles ... */
@@ -320,8 +323,8 @@
     background: white;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding-top: 40px;
+    justify-content: center;
+    padding-bottom: 80px;
     gap: 40px;
     transform: translateX(-100%);
     transition: transform 0.3s ease-in-out;

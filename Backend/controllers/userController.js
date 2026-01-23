@@ -47,7 +47,16 @@ export const register = async (req, res) => {
         await newUser.save()
         const token = createToken(newUser._id);
         console.log(`✅ User registered: ${email} as ${role || 'student'}`);
-        return res.json({ success: true, token })
+        return res.json({
+            success: true,
+            token,
+            user: {
+                _id: newUser._id,
+                name: newUser.name,
+                email: newUser.email,
+                role: newUser.role
+            }
+        })
 
     } catch (error) {
         console.error("❌ Register Error:", error);

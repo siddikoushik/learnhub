@@ -63,15 +63,15 @@ const Hero = () => {
 
           <div className="stats-row">
             <div className="stat-item">
-              <h3><CountUp end={10000} duration={2000} suffix="+" /></h3>
+              <h3><CountUp end={stats.students} duration={2000} suffix="+" /></h3>
               <p>Active Students</p>
             </div>
             <div className="stat-item">
-              <h3><CountUp end={500} duration={2000} suffix="+" /></h3>
+              <h3><CountUp end={stats.teachers} duration={2000} suffix="+" /></h3>
               <p>Expert Tutors</p>
             </div>
             <div className="stat-item">
-              <h3><CountUp end={4.9} duration={2000} isFloat /></h3>
+              <h3><CountUp end={stats.rating} duration={2000} isFloat /></h3>
               <p>User Rating</p>
             </div>
           </div>

@@ -90,6 +90,32 @@ font-size: 14px;
   flex: 1;
 }
 
+.time-range-inputs {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex: 1.5;
+  /* Give it more weight than the single subject input */
+}
+
+@media (max-width: 768px) {
+  .add-slot-form {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .add-slot-form input,
+  .time-range-inputs,
+  .add-slot-form button {
+    width: 100%;
+    flex: none;
+  }
+
+  .time-range-inputs {
+    justify-content: space-between;
+  }
+}
+
 .slot-item {
   display: flex;
   justify-content: space-between;

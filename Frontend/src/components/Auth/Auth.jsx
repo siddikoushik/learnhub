@@ -6,6 +6,7 @@ import "./Auth.css";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import config from "../../config";
 
 
 const Auth = ({ setLogin }) => {
@@ -30,8 +31,8 @@ const Auth = ({ setLogin }) => {
     try {
       const url =
         state === "signup"
-          ? "http://localhost:5001/api/user/register"
-          : "http://localhost:5001/api/user/login";
+          ? `${config.API_BASE_URL}/api/user/register`
+          : `${config.API_BASE_URL}/api/user/login`;
 
       const body =
         state === "signup"

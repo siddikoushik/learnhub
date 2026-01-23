@@ -3,6 +3,7 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import SimplePeer from "simple-peer";
 import socket from "../../socket";
+import config from "../../config";
 import "./Classroom.css";
 
 const Classroom = () => {
@@ -34,7 +35,7 @@ const Classroom = () => {
         const fetchBookingDetails = async () => {
             try {
                 // Fetch booking using roomId as bookingId
-                const res = await fetch(`http://localhost:5001/api/booking/${roomId}`);
+                const res = await fetch(`${config.API_BASE_URL}/api/booking/${roomId}`);
                 const data = await res.json();
                 if (data.success && data.booking) {
                     // Set student ID from DB (robust against refresh)

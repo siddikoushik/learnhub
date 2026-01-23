@@ -1,5 +1,6 @@
 import React from "react";
 import "./Contact.css";
+import { assets } from "../../assets/frontendImages";
 
 const Contact = () => {
     return (
@@ -12,16 +13,18 @@ const Contact = () => {
             <div className="contact-content">
                 <div className="contact-info">
                     <div className="info-item">
-                        <h3>📍 Address</h3>
-                        <p>123 Education Lane, Tech City, TC 90210</p>
+                        <img src={assets.location} alt="Location" className="info-icon" />
+                        <p>CVR College Of Engineering ,Mangalpalli,Ibrahimapatnam.</p>
                     </div>
+
                     <div className="info-item">
-                        <h3>📧 Email</h3>
-                        <p>support@learnhub.com</p>
+                        <img src={assets.mail} alt="Mail" className="info-icon" />
+                        <p>siddusiddu5849@gmail.com</p>
                     </div>
+
                     <div className="info-item">
-                        <h3>📞 Phone</h3>
-                        <p>+1 (555) 123-4567</p>
+                        <img src={assets.phone} alt="Phone" className="info-icon" />
+                        <p>+91 9063408229</p>
                     </div>
                 </div>
 

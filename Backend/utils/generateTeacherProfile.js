@@ -1,8 +1,16 @@
 import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Initialize lazily or check for key
+let openai;
+try {
+  if (process.env.OPENAI_API_KEY) {
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
+  }
+} catch (error) {
+  console.warn("OpenAI API Key missing or invalid. Teacher profile generation will be disabled.");
+}
 
 export const generateTeacherProfile = async (teacher) => {
   const prompt = `
@@ -35,6 +43,10 @@ Motivation, values, and commitment to student success
 
 Write as if the teacher is confidently introducing themselves to students and parents on a tutoring platform.
 `;
+
+  if (!openai) {
+    return `Bio for ${teacher.name} (AI generation unavailable - Missing API Key)`;
+  }
 
   const response = await openai.chat.completions.create({
     model: "gpt-4o-mini",

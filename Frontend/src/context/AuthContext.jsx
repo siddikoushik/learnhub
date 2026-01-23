@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from "react";
 import { Students, Teachers } from "../assets/frontendImages";
+import config from "../config";
 
 export const AuthContext = createContext();
 
@@ -9,7 +10,7 @@ export const AuthProvider = ({ children }) => {
   const [profile, setProfile] = useState(null);
   const [menu, setMenu] = useState("");
 
-  const url = "http://localhost:5001";
+  const url = config.API_BASE_URL;
 
   // 🔐 Load auth data safely on app start
   useEffect(() => {

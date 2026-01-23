@@ -202,6 +202,31 @@
   .hero-container {
     flex-direction: column;
     text-align: center;
+    gap: 40px;
+    /* Adjust gap */
+  }
+
+  .hero-text {
+    width: 100%;
+    margin-top: 40px;
+  }
+
+  .hero-visual {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 40px;
+  }
+
+  /* Make the BIG logo responsive */
+  .decorative-circle {
+    width: 90vw;
+    /* Take most of screen width */
+    height: 90vw;
+    /* Keep aspect ratio square */
+    max-width: 500px;
+    max-height: 500px;
+    margin: 0 auto;
+    /* Center it */
   }
 
   .hero-buttons {
@@ -210,9 +235,7 @@
 
   .stats-row {
     justify-content: center;
-  }
-
-  .floating-card {
-    width: 100%;
+    flex-wrap: wrap;
+    gap: 20px;
   }
 }

@@ -1,7 +1,8 @@
 import { io } from "socket.io-client";
+import config from "./config";
 
 // 🔥 IMPORTANT: connect to SAME port as backend
-const socket = io("http://localhost:5001", {
+const socket = io(config.API_BASE_URL, {
   transports: ["websocket"],
   reconnection: true,
   reconnectionAttempts: Infinity,

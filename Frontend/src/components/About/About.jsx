@@ -6,7 +6,6 @@ const About = () => {
   const features = [
     { title: "Expert Mentors", desc: "Learn from industry leaders from top tech companies.", icon: "👨‍🏫" },
     { title: "Interactive Learning", desc: "Live sessions, quizzes, and hands-on projects.", icon: "💻" },
-    { title: "Career Guidance", desc: "Resume reviews and mock interviews to get you hired.", icon: "🚀" },
     { title: "Community Support", desc: "Join 10k+ learners helping each other grow.", icon: "🤝" },
   ];
 

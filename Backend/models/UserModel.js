@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import dotenv from 'dotenv'
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -17,8 +16,20 @@ const userSchema = new mongoose.Schema({
     },
     role: {
         type: String,
-        enum: ['student', 'teacher'],
+        enum: ['student', 'teacher', 'admin'],
         default: 'student'
+    },
+    isActive: {
+        type: Boolean,
+        default: true
+    },
+    verificationStatus: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'
+    },
+    lastLogin: {
+        type: Date
     },
     subject: {
         type: String, // e.g. "Maths", "Physics" (Only for teachers)
@@ -47,9 +58,15 @@ const userSchema = new mongoose.Schema({
     // Files (Images/Docs)
     profileImage: { type: String },
     qrCode: { type: String },
+    upiId: { type: String }, // For payments
+    classRange: { type: String }, // e.g. "Class 5-10"
     documents: [{ type: String }],
-    isVerified: { type: Boolean, default: false }
-})
+    isVerified: { type: Boolean, default: false },
+    otp: { type: String },
+    otpExpires: { type: Date },
+    averageRating: { type: Number, default: 0 },
+    totalRatings: { type: Number, default: 0 }
+}, { timestamps: true })
 
 const userModel = mongoose.models.user || mongoose.model("user", userSchema)
 

@@ -26,13 +26,13 @@
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
-  background: #eff6ff;
+  background: var(--bg-surface);
   color: var(--primary);
   border-radius: 100px;
   font-size: 13px;
   font-weight: 600;
   margin-bottom: 24px;
-  border: 1px solid #dbeafe;
+  border: 1px solid var(--border-light);
 }
 
 .hero-title {
@@ -96,13 +96,14 @@
 
 .floating-card {
   width: 400px;
-  background: white;
+  background: var(--bg-surface);
   border-radius: 20px;
   padding: 32px;
-  box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--glass-shadow);
   border: 1px solid var(--border-light);
   position: relative;
   z-index: 10;
+  transition: background-color var(--transition-speed);
 }
 
 .card-header h2 {
@@ -125,14 +126,14 @@
 }
 
 .course-item:hover {
-  background: #f8fafc;
+  background: var(--bg-main);
   border-color: var(--border-light);
 }
 
 .course-icon {
   width: 48px;
   height: 48px;
-  background: #eff6ff;
+  background: var(--bg-main);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -163,15 +164,16 @@
   justify-content: center;
   border-radius: 50%;
   /* Force circle */
-  background: white;
+  background: var(--bg-surface);
   /* Clean white background like reference */
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--glass-shadow);
   /* Deeper shadow */
   animation: float 6s ease-in-out infinite;
-  border: 8px solid rgba(255, 255, 255, 0.5);
+  border: 8px solid var(--glass-border);
   /* Thicker glass border */
   overflow: hidden;
   /* Clip everything to circle */
+  transition: background-color var(--transition-speed);
 }
 
 .hero-logo-img {

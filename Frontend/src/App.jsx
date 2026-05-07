@@ -1,5 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import Navbar from './components/Navbar/Navbar'
 import Home from './pages/Home/Home'
 import Footer from './components/Footer/Footer'
@@ -10,10 +12,10 @@ import TeachersMenu from './pages/TeachersMenu/TeachersMenu'
 import TeachersDisplay from './components/TeachersDisplay/TeachersDisplay'
 import StudentsDashboard from './components/StudentsDashboard/StudentsDashboard'
 import TeacherDetailsById from './components/TeacherDetailsById/TeacherDetailsById'
-import AirDrawStudent from './components/AirDraw/AirDrawStudent'
-import AirDrawTeacher from './components/AirDraw/AirDrawTeacher'
 import Payment from './pages/Payment/Payment'
 import Classroom from './pages/Classroom/Classroom'
+import PaymentPage from './pages/QRPayment/PaymentPage'
+import UploadProof from './pages/QRPayment/UploadProof'
 
 const AppContent = () => {
   const location = useLocation();
@@ -24,6 +26,18 @@ const AppContent = () => {
 
   return (
     <div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
       {login && (<Auth setLogin={setLogin} />)} {/* Render Global Auth */}
       {!isClassroom && <Navbar login={login} setLogin={setLogin} />}
 
@@ -43,13 +57,13 @@ const AppContent = () => {
 
 
         <Route path="/teacher/:id" element={<TeacherDetailsById />} />
-
-        <Route path="/teacher/airdraw/:roomId" element={<AirDrawTeacher />} />
-        <Route path="/student/airdraw/:roomId" element={<AirDrawStudent />} />
         <Route path="/classroom/:roomId" element={<Classroom />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/payment-qr" element={<PaymentPage />} />
+        <Route path="/upload-proof" element={<UploadProof />} />
       </Routes>
 
+      {!isClassroom && <Footer />}
     </div>
   )
 }

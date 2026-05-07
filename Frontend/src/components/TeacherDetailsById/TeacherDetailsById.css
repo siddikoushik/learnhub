@@ -1,212 +1,517 @@
 /* ===============================
-   MAIN CONTAINER
+   LAYOUT & CONTAINERS
 ================================ */
-.teacher-details-container {
-  max-width: 900px;
-  margin: 40px auto;
-  padding: 35px;
-  background: #ffffff;
-  border-radius: 18px;
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.08);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+.teacher-profile-page {
+  max-width: 1200px;
+  margin: 20px auto 60px;
+  padding: 0 20px;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  color: var(--text-main);
+}
+
+.profile-header-nav {
+  margin-bottom: 20px;
+}
+
+.icon-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.icon-back-btn:hover {
+  background: var(--bg-surface);
+  color: var(--primary);
+}
+
+.profile-card-main {
+  background: var(--bg-surface);
+  border-radius: 24px;
+  border: 1px solid var(--border-light);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  position: relative;
+}
+
+/* ===============================
+   HEADER SECTION
+================================ */
+.profile-header-section {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 30px;
+  padding: 50px 40px;
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05) 0%, transparent 100%);
+  background-image: radial-gradient(at 0% 0%, rgba(var(--primary-rgb), 0.08) 0px, transparent 50%),
+                    radial-gradient(at 100% 0%, rgba(var(--primary-rgb), 0.05) 0px, transparent 50%);
+  border-bottom: 1px solid var(--border-light);
+  align-items: center;
+  position: relative;
+}
+
+.profile-header-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%232563eb' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2v-4h4v-2H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.profile-image-wrapper {
+  position: relative;
+}
+
+.profile-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 20px;
+  object-fit: cover;
+  border: 4px solid #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.status-badge {
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+
+.profile-title-info h1 {
+  font-size: 32px;
+  margin: 0 0 10px 0;
+  color: var(--text-main);
+}
+
+.quick-badges {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.badge-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--bg-main);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
+}
+
+.badge-item svg {
+  color: #f59e0b; /* Star color */
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* PRICING CARD */
+.profile-pricing-card {
+  background: var(--bg-main);
+  padding: 25px;
+  border-radius: 20px;
+  border: 1px solid var(--border-light);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  min-width: 240px;
   text-align: center;
 }
 
-/* ===============================
-   TEACHER IMAGE
-================================ */
-.teacher-image {
-  width: 160px;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 4px solid #2563eb;
-  margin-bottom: 18px;
+.price-tag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: var(--text-main);
 }
 
-/* ===============================
-   TEACHER INFO
-================================ */
-.teacher-details-container h2 {
-  font-size: 30px;
-  font-weight: 600;
-  color: #1f2937;
-  margin-bottom: 10px;
+.price-tag .amount {
+  font-size: 32px;
+  font-weight: 700;
 }
 
-.teacher-details-container p {
-  font-size: 15.5px;
-  color: #4b5563;
-  margin: 6px 0;
+.price-tag .per-hour {
+  color: var(--text-muted);
+  font-size: 14px;
 }
 
-.teacher-details-container p strong {
-  color: #111827;
-}
-
-/* ===============================
-   BIO SECTION
-================================ */
-.bio {
-  margin-top: 25px;
-  padding: 20px;
-  background: #f9fafb;
-  border-radius: 14px;
-  text-align: left;
-}
-
-.bio h4 {
-  font-size: 18px;
-  color: #2563eb;
-  margin-bottom: 8px;
-}
-
-.bio p {
-  font-size: 15px;
-  color: #374151;
-  line-height: 1.6;
-}
-
-/* ===============================
-   BOOK BUTTON
-================================ */
-.book-btn {
-  margin-top: 30px;
-  padding: 14px 28px;
-  font-size: 16px;
-  font-weight: 500;
-  background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  color: #ffffff;
+.enroll-primary-btn {
+  background: var(--primary-gradient);
+  color: white;
   border: none;
+  padding: 14px;
   border-radius: 12px;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.book-btn:hover {
+.enroll-primary-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 8px 20px rgba(var(--primary-rgb), 0.3);
+}
+
+.book-secondary-btn {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.book-secondary-btn:hover {
+  background: rgba(var(--primary-rgb), 0.05);
 }
 
 /* ===============================
-   BOOKING MODAL
+   CONTENT GRID
 ================================ */
-.booking-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
+.profile-content-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 40px;
+  padding: 40px;
+}
+
+.profile-section {
+  margin-bottom: 35px;
+}
+
+.profile-section h3 {
   display: flex;
-  justify-content: center;
   align-items: center;
-  z-index: 1000;
+  gap: 10px;
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: var(--text-main);
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 8px;
+  width: fit-content;
 }
 
-/* ===============================
-   BOOKING BOX
-================================ */
-.booking-box {
-  background: #ffffff;
-  width: 360px;
-  padding: 28px;
+.bio-text {
+  line-height: 1.7;
+  color: var(--text-muted);
+  font-size: 16px;
+}
+
+.bio-text.secondary {
+  margin-top: 15px;
+  font-style: italic;
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.stat-box {
+  background: var(--bg-main);
+  padding: 20px;
   border-radius: 16px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
-  animation: fadeIn 0.3s ease;
-}
-
-.booking-box h3 {
-  text-align: center;
-  font-size: 22px;
-  color: #1f2937;
-  margin-bottom: 18px;
-}
-
-/* ===============================
-   INPUTS & TEXTAREA
-================================ */
-.booking-box input,
-.booking-box textarea {
-  width: 100%;
-  padding: 12px 14px;
-  margin-bottom: 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  font-size: 14.5px;
-  outline: none;
-  transition: border 0.2s ease;
-}
-
-.booking-box input:focus,
-.booking-box textarea:focus {
-  border-color: #2563eb;
-}
-
-.booking-box textarea {
-  resize: none;
-  min-height: 90px;
-}
-
-/* ===============================
-   ACTION BUTTONS
-================================ */
-.booking-actions {
+  border: 1px solid var(--border-light);
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
+  flex-direction: column;
+  gap: 5px;
 }
 
-.booking-actions button {
-  flex: 1;
-  padding: 12px 0;
+.stat-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.details-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.detail-item .label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.subject-tag {
+  background: rgba(var(--primary-rgb), 0.1);
+  color: var(--primary);
+  padding: 5px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.help-card {
+  background: linear-gradient(135deg, var(--primary), #4f46e5);
+  color: white;
+  padding: 25px;
+  border-radius: 20px;
+  margin-top: 20px;
+}
+
+.help-card h3, .help-card p {
+  color: white;
+  border-bottom: none;
+}
+
+.msg-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
   border-radius: 10px;
   border: none;
-  font-size: 14.5px;
+  background: white;
+  color: var(--primary);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   cursor: pointer;
-  transition: all 0.25s ease;
+  transition: transform 0.2s;
 }
 
-/* Confirm */
-.booking-actions button:first-child {
-  background: #16a34a;
-  color: white;
-}
-
-.booking-actions button:first-child:hover {
-  background: #15803d;
-}
-
-/* Cancel */
-.booking-actions button:last-child {
-  background: #ef4444;
-  color: white;
-}
-
-.booking-actions button:last-child:hover {
-  background: #dc2626;
+.msg-btn:hover {
+  transform: scale(1.02);
 }
 
 /* ===============================
-   ANIMATION
+   MODAL STYLING
 ================================ */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.booking-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
 }
+
+.booking-modal-premium {
+  background: var(--bg-surface);
+  width: 100%;
+  max-width: 480px;
+  border-radius: 24px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+  animation: modalSlideUp 0.3s ease-out;
+}
+
+.modal-header {
+  padding: 20px 25px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-modal {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 25px;
+}
+
+.tutor-mini-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 25px;
+  background: var(--bg-main);
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.tutor-mini-info img {
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.tutor-mini-info h4 { margin: 0; font-size: 16px; }
+.tutor-mini-info p { margin: 0; font-size: 13px; color: var(--text-muted); }
+
+.input-group {
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.input-group label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.input-group input, .input-group textarea {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border-light);
+  background: var(--bg-main);
+  color: var(--text-main);
+  outline: none;
+}
+
+.input-group textarea { min-height: 80px; resize: none; }
+
+.modal-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.confirm-btn {
+  background: var(--primary-gradient);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: var(--bg-main);
+  color: var(--text-muted);
+  border: 1px solid var(--border-light);
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ===============================
+   ANIMATIONS & LOADER
+================================ */
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(var(--primary-rgb), 0.1);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* ===============================
    RESPONSIVE
 ================================ */
-@media (max-width: 500px) {
-  .teacher-details-container {
-    padding: 25px;
+@media (max-width: 992px) {
+  .profile-header-section {
+    grid-template-columns: auto 1fr;
   }
-
-  .booking-box {
-    width: 90%;
+  .profile-pricing-card {
+    grid-column: span 2;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .profile-content-grid {
+    grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 600px) {
+  .profile-header-section {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+  .quick-badges { justify-content: center; }
+  .contact-info { align-items: center; }
+  .profile-pricing-card {
+    flex-direction: column;
+    width: 100%;
+  }
+  .stats-row { grid-template-columns: 1fr; }
+}
+

@@ -49,7 +49,7 @@
 .menu-icon {
     font-size: 48px;
     margin-bottom: 24px;
-    background: #f8fafc;
+    background: var(--bg-main);
     width: 90px;
     height: 90px;
     border-radius: 50%;

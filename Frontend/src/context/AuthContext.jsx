@@ -18,9 +18,10 @@ export const AuthProvider = ({ children }) => {
     const storedToken = localStorage.getItem("token");
 
     // ✅ SAFE USER PARSE
+    let parsedUser = null;
     if (storedUser && storedUser !== "undefined") {
       try {
-        const parsedUser = JSON.parse(storedUser);
+        parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
       } catch (error) {
         console.error("Invalid user data. Clearing storage.");
@@ -28,9 +29,26 @@ export const AuthProvider = ({ children }) => {
       }
     }
 
-    // ✅ SAFE TOKEN LOAD
-    if (storedToken && storedToken !== "undefined") {
+    // ✅ SAFE TOKEN LOAD + VALIDATE
+    if (storedToken && storedToken !== "undefined" && parsedUser) {
       setToken(storedToken);
+
+      // Validate token against backend (catch stale / wrong-secret tokens)
+      fetch(`${url}/api/user/profile`, {
+        headers: { Authorization: `Bearer ${storedToken}` },
+      })
+        .then((res) => {
+          if (res.status === 401) {
+            console.warn("Stored token is invalid/expired. Logging out.");
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
+            setUser(null);
+            setToken("");
+          }
+        })
+        .catch(() => {
+          // Network error — keep token, will retry later
+        });
     }
   }, []);
 

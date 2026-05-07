@@ -38,25 +38,36 @@ const Hero = () => {
   // Initialize with fallback "random" numbers immediately to avoid "0" flash
   const [stats, setStats] = useState({ students: 1250, teachers: 45, rating: 4.9 });
 
-  // Fetch Stats dynamically
+  // Fetch Stats dynamically (with retry for dev startup)
   useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const res = await fetch(`${url}/api/user/stats`);
-        const data = await res.json();
-        if (data.success) {
-          // If stats are 0 (fresh DB), use "random" fallback numbers for visual appeal
-          setStats({
-            students: data.stats.students || 1250,
-            teachers: data.stats.teachers || 45,
-            rating: data.stats.rating || 4.9
-          });
+    let cancelled = false;
+
+    const fetchStats = async (retries = 3, delay = 1500) => {
+      for (let i = 0; i < retries; i++) {
+        try {
+          const res = await fetch(`${url}/api/user/stats`);
+          const data = await res.json();
+          if (!cancelled && data.success) {
+            setStats({
+              students: data.stats.students || 1250,
+              teachers: data.stats.teachers || 45,
+              rating: data.stats.rating || 4.9
+            });
+          }
+          return; // success — stop retrying
+        } catch (error) {
+          if (i < retries - 1) {
+            // Wait before retrying (backend may still be starting)
+            await new Promise(r => setTimeout(r, delay * (i + 1)));
+          } else {
+            console.warn("Could not fetch platform stats (using defaults):", error.message);
+          }
         }
-      } catch (error) {
-        console.error("Failed to fetch stats", error);
       }
     };
+
     fetchStats();
+    return () => { cancelled = true; };
   }, [url]);
 
   return (

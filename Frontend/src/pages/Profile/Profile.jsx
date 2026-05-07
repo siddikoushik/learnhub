@@ -28,7 +28,9 @@ const Profile = () => {
         experience: user?.experience || '',
         price: user?.price || '',
         mode: user?.mode || 'Online',
-        education: user?.education || ''
+        education: user?.education || '',
+        classRange: user?.classRange || '',
+        upiId: user?.upiId || ''
     });
 
     if (!isAuthenticated) {
@@ -49,10 +51,33 @@ const Profile = () => {
         ref.current.click();
     };
 
-    const handleFileChange = (e) => {
+    const handleFileChange = async (e) => {
         const file = e.target.files[0];
-        if (file) {
-            alert(`Selected file: ${file.name}`);
+        if (!file) return;
+
+        const fieldName = e.target.name; // Use name attribute to distinguish
+        const formData = new FormData();
+        formData.append(fieldName, file);
+
+        try {
+            const response = await fetch(`${url}/api/user/upload`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                alert(`${fieldName} Uploaded Successfully!`);
+                setUser(data.user); // Update context
+            } else {
+                alert("Upload failed: " + data.message);
+            }
+        } catch (error) {
+            console.error("Upload Error:", error);
+            alert("Error uploading file");
         }
     };
 
@@ -92,8 +117,12 @@ const Profile = () => {
                 {/* TOP: Header & Photo */}
                 <div className="profile-header">
                     <div className="profile-photo-wrapper" onClick={() => handleFileClick(photoRef)} style={{ cursor: 'pointer' }}>
-                        <input type="file" hidden ref={photoRef} onChange={handleFileChange} accept="image/*" />
-                        <span role="img" aria-label="avatar">👤</span>
+                        <input type="file" hidden ref={photoRef} name="profileImage" onChange={handleFileChange} accept="image/*" />
+                        {user.profileImage ? (
+                            <img src={`${url}/images/${user.profileImage}`} alt="Profile" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                        ) : (
+                            <span role="img" aria-label="avatar">👤</span>
+                        )}
                         <div className="upload-overlay">Change</div>
                     </div>
                     <h1 className="profile-name">{user.name}</h1>
@@ -157,7 +186,7 @@ const Profile = () => {
                         {/* CONDITIONAL SECTIONS */}
                         {isTeacher ? (
                             <>
-                                <div className="section-label">Professional Details (Teacher)</div>
+                                <div className="section-label">Teaching Details</div>
                                 <div className="form-grid">
                                     <div className="form-group">
                                         <label>Main Subject</label>
@@ -171,24 +200,13 @@ const Profile = () => {
                                         />
                                     </div>
                                     <div className="form-group">
-                                        <label>Education / Qualification</label>
+                                        <label>Class Range</label>
                                         <input
                                             type="text"
-                                            name="education"
+                                            name="classRange"
                                             className="form-control"
-                                            placeholder="e.g. B.Tech, M.Sc"
-                                            value={formData.education}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                    <div className="form-group">
-                                        <label>Teaching Experience (Years)</label>
-                                        <input
-                                            type="number"
-                                            name="experience"
-                                            className="form-control"
-                                            placeholder="e.g. 5"
-                                            value={formData.experience}
+                                            placeholder="e.g. Class 5 - 10"
+                                            value={formData.classRange}
                                             onChange={handleChange}
                                         />
                                     </div>
@@ -215,6 +233,32 @@ const Profile = () => {
                                             <option>Offline</option>
                                             <option>Both</option>
                                         </select>
+                                    </div>
+                                </div>
+
+                                <div className="section-label">Professional Details (Teacher)</div>
+                                <div className="form-grid">
+                                    <div className="form-group">
+                                        <label>Education / Qualification</label>
+                                        <input
+                                            type="text"
+                                            name="education"
+                                            className="form-control"
+                                            placeholder="e.g. B.Tech, M.Sc"
+                                            value={formData.education}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Teaching Experience (Years)</label>
+                                        <input
+                                            type="number"
+                                            name="experience"
+                                            className="form-control"
+                                            placeholder="e.g. 5"
+                                            value={formData.experience}
+                                            onChange={handleChange}
+                                        />
                                     </div>
                                     <div className="form-group" style={{ gridColumn: '1 / -1' }}>
                                         <label>Bio / About Me</label>
@@ -244,13 +288,29 @@ const Profile = () => {
                                 <div className="section-label">Verification & Payment</div>
                                 <div className="form-grid">
                                     <div className="form-group">
+                                        <label>Payment UPI ID / Number</label>
+                                        <input
+                                            type="text"
+                                            name="upiId"
+                                            className="form-control"
+                                            placeholder="e.g. teacher@upi or 9876543210"
+                                            value={formData.upiId}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
                                         <label>Payment QR Code Photo</label>
-                                        <input type="file" hidden ref={qrRef} onChange={handleFileChange} accept="image/*" />
+                                        <input type="file" hidden ref={qrRef} name="qrCode" onChange={handleFileChange} accept="image/*" />
                                         <div className="file-input-wrapper" onClick={() => handleFileClick(qrRef)}>
-                                            <p>Click to Upload QR Code</p>
+                                            <p>Click to {user.qrCode ? 'Update' : 'Upload'} QR Code</p>
                                         </div>
-                                        {/* Placeholder for QR preview */}
-                                        <div className="qr-preview">Items QR</div>
+                                        {/* QR Preview */}
+                                        {user.qrCode && (
+                                            <div className="qr-preview-container" style={{ marginTop: '10px' }}>
+                                                <img src={`${url}/images/${user.qrCode}`} alt="QR Code" style={{ maxWidth: '150px', borderRadius: '8px', border: '1px solid #ddd' }} />
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="form-group">

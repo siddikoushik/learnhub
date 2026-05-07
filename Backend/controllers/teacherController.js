@@ -45,30 +45,44 @@ export const getTeacherById = async (req, res) => {
 // Manage Availability (Add/Remove Slots - Updates USER model)
 export const manageAvailability = async (req, res) => {
   const userId = req.userId; // From Auth Middleware (Secure)
-  const { time, action, subject } = req.body;
+  const { time, action, subject, price, classRange } = req.body;
+  console.log("🔹 AVAILABILITY UPDATE:", { userId, action, time, subject, price, classRange });
 
   try {
     const user = await UserModel.findById(userId);
     if (!user) return res.status(404).json({ success: false, message: "User not found" });
 
-    // Update Subject text if provided
+    // Update Subject, Price, Class Range if provided
     if (subject) user.subject = subject;
+    if (price) user.price = price;
+    if (classRange) user.classRange = classRange;
 
     if (action === 'add') {
-      // Handle Array of Times (Bulk Add) or Single String
       const timesToAdd = Array.isArray(time) ? time : [time];
+      let addedCount = 0;
+      let skippedCount = 0;
 
       timesToAdd.forEach(t => {
-        // Prevent duplicates
         const exists = user.availability.find(slot => slot.time === t);
         if (!exists) {
           user.availability.push({ time: t, isBooked: false });
+          addedCount++;
+        } else {
+          skippedCount++;
         }
       });
 
+      await user.save();
+      return res.json({ 
+        success: true, 
+        message: addedCount > 0 ? `Added ${addedCount} slots. ${skippedCount > 0 ? `Skipped ${skippedCount} duplicates.` : ""}` : "All slots already exist.", 
+        availability: user.availability 
+      });
+
     } else if (action === 'remove') {
-      // Remove specific slot
       user.availability = user.availability.filter(slot => slot.time !== time);
+    } else if (action === 'clear_all') {
+      user.availability = [];
     }
 
     await user.save();

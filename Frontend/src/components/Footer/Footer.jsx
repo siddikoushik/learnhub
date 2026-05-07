@@ -1,9 +1,6 @@
 import React from "react";
 import "./Footer.css";
-import facebook from '../../assets/SocialImages/facebook.png'
-import insta from '../../assets/SocialImages/Insta.png'
-import twitter from '../../assets/SocialImages/twiter.png'
-import linkedin from '../../assets/SocialImages/linkedIn.png'
+import { FacebookIcon, InstagramIcon, LinkedinIcon, TwitterIcon } from "../SocialIcons";
 
 const Footer = () => {
   return (
@@ -22,8 +19,8 @@ const Footer = () => {
           <h4>Quick Links</h4>
           <ul>
             <li><a href="/">Home</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#contact">Contact</a></li>
           </ul>
         </div>
 
@@ -42,10 +39,18 @@ const Footer = () => {
         <div className="footer-social">
           <h4>Follow Us</h4>
           <div className="social-icons">
-            <a href="#"><img src={facebook} alt="" /></a>
-            <a href="#"><img src={insta} alt="" /></a>
-            <a href="#"><img src={linkedin} alt="" /></a>
-            <a href="#"><img src={twitter} alt="" /></a>
+            <a href="#" className="social-icon-wrapper facebook" aria-label="Facebook">
+              <FacebookIcon size={20} />
+            </a>
+            <a href="#" className="social-icon-wrapper instagram" aria-label="Instagram">
+              <InstagramIcon size={20} />
+            </a>
+            <a href="#" className="social-icon-wrapper linkedin" aria-label="LinkedIn">
+              <LinkedinIcon size={20} />
+            </a>
+            <a href="#" className="social-icon-wrapper twitter" aria-label="Twitter">
+              <TwitterIcon size={20} />
+            </a>
           </div>
         </div>
       </div>

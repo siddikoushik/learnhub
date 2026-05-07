@@ -1,6 +1,8 @@
-import React from "react";
-import "./Contact.css";
+import { MapPin, Mail, Phone, User, MessageSquare, Send } from "lucide-react";
+import { GithubIcon, InstagramIcon, TwitterIcon, LinkedinIcon } from "../SocialIcons";
 import { motion } from "framer-motion";
+import './Contact.css';
+
 
 const Contact = () => {
     return (
@@ -25,7 +27,9 @@ const Contact = () => {
 
                     <div className="info-items">
                         <div className="info-item">
-                            <div className="icon-box">📍</div>
+                            <div className="icon-box">
+                                <MapPin size={24} />
+                            </div>
                             <div className="info-text">
                                 <h4>Location</h4>
                                 <p>CVR College Of Engineering,<br />Mangalpalli, Ibrahimapatnam.</p>
@@ -33,7 +37,9 @@ const Contact = () => {
                         </div>
 
                         <div className="info-item">
-                            <div className="icon-box">📧</div>
+                            <div className="icon-box">
+                                <Mail size={24} />
+                            </div>
                             <div className="info-text">
                                 <h4>Email</h4>
                                 <p>siddikoushik321@gmail.com</p>
@@ -41,7 +47,9 @@ const Contact = () => {
                         </div>
 
                         <div className="info-item">
-                            <div className="icon-box">📞</div>
+                            <div className="icon-box">
+                                <Phone size={24} />
+                            </div>
                             <div className="info-text">
                                 <h4>Phone</h4>
                                 <p>+91 9063408229</p>
@@ -50,10 +58,18 @@ const Contact = () => {
                     </div>
 
                     <div className="social-links">
-                        {/* Example Socials */}
-                        <span className="social-icon">Instagram</span>
-                        <span className="social-icon">Twitter</span>
-                        <span className="social-icon">LinkedIn</span>
+                        <a href="#" className="social-icon instagram" aria-label="Instagram">
+                            <InstagramIcon size={24} />
+                        </a>
+                        <a href="#" className="social-icon twitter" aria-label="Twitter">
+                            <TwitterIcon size={24} />
+                        </a>
+                        <a href="#" className="social-icon linkedin" aria-label="LinkedIn">
+                            <LinkedinIcon size={24} />
+                        </a>
+                        <a href="#" className="social-icon github" aria-label="Github">
+                            <GithubIcon size={24} />
+                        </a>
                     </div>
                 </motion.div>
 
@@ -81,21 +97,23 @@ const Contact = () => {
                     }}
                 >
                     <div className="form-group">
-                        <label>Your Name</label>
+                        <label><User size={18} /> Your Name</label>
                         <input name="user_name" type="text" placeholder="John Doe" required />
                     </div>
 
                     <div className="form-group">
-                        <label>Your Email</label>
+                        <label><Mail size={18} /> Your Email</label>
                         <input name="user_email" type="email" placeholder="john@example.com" required />
                     </div>
 
-                    <div className="form-group">
-                        <label>Message</label>
+                    <div className="form-group full-width">
+                        <label><MessageSquare size={18} /> Message</label>
                         <textarea name="message" rows="5" placeholder="How can we help you?" required></textarea>
                     </div>
 
-                    <button type="submit" className="btn-primary w-full">Send Message</button>
+                    <button type="submit" className="btn-primary">
+                        Send Message <Send size={20} />
+                    </button>
                 </motion.form>
             </div>
         </div>

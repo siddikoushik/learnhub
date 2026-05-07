@@ -3,13 +3,16 @@ import "./StudentsDashboard.css";
 import { AuthContext } from "../../context/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import RatingModal from "../RatingModal/RatingModal";
+import axios from "axios";
 
 const StudentsDashboard = () => {
-  const { url, user, setLogin } = useContext(AuthContext); // Get setLogin to trigger modal
+  const { url, user, token, setLogin } = useContext(AuthContext); 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [expandedTutorId, setExpandedTutorId] = useState(null);
+  const [selectedBookingForRating, setSelectedBookingForRating] = useState(null);
 
   // Redirect if not logged in
   useEffect(() => {
@@ -80,7 +83,9 @@ const StudentsDashboard = () => {
 
   const fetchBookings = async () => {
     try {
-      const res = await fetch(`${url}/api/booking/student/${user._id}`);
+      const res = await fetch(`${url}/api/booking/student/${user._id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await res.json();
       if (data.success) {
         // 1. Deduplicate bookings by Time Slot + Teacher to clean up legacy double-bookings
@@ -121,7 +126,7 @@ const StudentsDashboard = () => {
         const formattedTutors = data.tutors.map(t => ({
           ...t,
           image: "👨‍🏫", // Default avatar for now
-          rating: 4.9, // Default rating
+          rating: t.totalRatings > 0 ? t.averageRating.toFixed(1) : "N/A", // Map averageRating or fallback
           // Map availability array to slots format
           slots: t.availability ? t.availability.map(a => ({
             time: a.time,
@@ -167,10 +172,12 @@ const StudentsDashboard = () => {
 
     // Call Real API
     try {
-      const res = await fetch(`${url}/api/booking`, {
+      // Step 1: Create the booking
+      const bookingRes = await fetch(`${url}/api/booking`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           studentId: user._id,
@@ -179,18 +186,62 @@ const StudentsDashboard = () => {
         })
       });
 
-      const data = await res.json();
-      if (data.success) {
-        navigate('/payment');
-        fetchBookings(); // Refresh bookings
-        fetchTutors();   // Refresh slots
-      } else {
-        alert("Booking Failed: " + data.message);
+      const bookingData = await bookingRes.json();
+      if (!bookingData.success) {
+        alert("Booking Failed: " + bookingData.message);
+        return;
       }
+
+      // Step 2: Create a payment record
+      const payRes = await fetch(`${url}/api/payment/create-payment`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          studentId: user._id,
+          teacherId: tutor._id,
+          amount: tutor.price || 1000,
+          bookingId: bookingData.booking._id
+        })
+      });
+
+      const payData = await payRes.json();
+
+      // Step 3: Navigate to QR payment page
+      navigate('/payment-qr', {
+        state: {
+          paymentRef: payData.success ? payData.payment.paymentRef : 'LH' + Date.now(),
+          paymentId: payData.success ? payData.payment._id : null,
+          amount: tutor.price || 1000,
+          teacherName: tutor.name,
+          upiId: tutor.upiId,
+          qrCode: tutor.qrCode,
+          phone: tutor.phone
+        }
+      });
+
+      fetchBookings();
+      fetchTutors();
     } catch (error) {
       console.error("Booking Error:", error);
-      // Fallback for demo
-      navigate('/payment');
+      navigate('/studentsmenu/dashboard');
+    }
+  };
+
+  const cancelBooking = async (id) => {
+    if (!window.confirm("Are you sure you want to cancel this booking?")) return;
+    try {
+      const res = await axios.delete(`${url}/api/booking/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (res.data.success) {
+        alert("Booking cancelled successfully.");
+        fetchBookings();
+      }
+    } catch (error) {
+      console.error("Error cancelling:", error);
     }
   };
 
@@ -233,11 +284,31 @@ const StudentsDashboard = () => {
                   {/* Top Row: Info */}
                   <div className="tutor-card-top">
                     <div className="tutor-info-left">
-                      <span className="tutor-avatar">{tutor.image}</span>
-                      <div>
-                        <h4>{tutor.name}</h4>
+                      <div className="tutor-avatar-wrapper" onClick={() => navigate(`/teacher/${tutor._id}`)}>
+                        {tutor.profileImage || tutor.image ? (
+                          <img 
+                            src={tutor.profileImage ? `${url}/images/${tutor.profileImage}` : (tutor.image.length > 5 ? `${url}/images/${tutor.image}` : null)} 
+                            alt={tutor.name} 
+                            onError={(e) => { e.target.style.display = 'none'; e.target.nextSibling.style.display = 'flex'; }}
+                          />
+                        ) : null}
+                        <span className="avatar-fallback" style={{ display: (tutor.profileImage || (tutor.image && tutor.image.length > 5)) ? 'none' : 'flex' }}>
+                          {tutor.name.charAt(0)}
+                        </span>
+                      </div>
+                      <div className="tutor-details-brief">
+                        <h4 onClick={() => navigate(`/teacher/${tutor._id}`)}>{tutor.name}</h4>
                         <p className="subject-tag">{tutor.subject || "General Tutor"}</p>
-                        <span className="rating-badge">⭐ {tutor.rating}</span>
+                        <div className="tutor-meta">
+                          <span className="rating-badge">⭐ {tutor.rating || "N/A"}</span>
+                          <span className="meta-separator">•</span>
+                          <button 
+                            className="view-profile-link" 
+                            onClick={() => navigate(`/teacher/${tutor._id}`)}
+                          >
+                            View Full Profile
+                          </button>
+                        </div>
                       </div>
                     </div>
                     <div className="tutor-info-right">
@@ -290,15 +361,15 @@ const StudentsDashboard = () => {
           <div className="stats-cards small-stats">
             <div className="card stat-card">
               <h3>{appointments.length}</h3>
-              <p>Meetings</p>
+              <p>Total Meetings</p>
             </div>
             <div className="card stat-card">
-              <h3>$0.00</h3>
-              <p>Wallet</p>
+              <h3>₹{appointments.filter(a => a.paymentStatus === 'Paid').reduce((sum, a) => sum + (a.teacherId?.price || 1000), 0)}</h3>
+              <p>Total Spent</p>
             </div>
             <div className="card stat-card">
               <h3>{availableTutors.length}</h3>
-              <p>Tutors</p>
+              <p>Available Tutors</p>
             </div>
           </div>
 
@@ -316,14 +387,91 @@ const StudentsDashboard = () => {
                     <div className="time-badge">{item.timeSlot}</div>
                     <div className="event-info">
                       <h4>{item.teacherId?.subject || "Session"} w/ {item.teacherId?.name || "Tutor"}</h4>
+                      {item.zoomLink && (
+                        <p style={{ fontSize: '12px', color: '#2563eb' }}>
+                          <a href={item.zoomLink} target="_blank" rel="noopener noreferrer">🌍 External Zoom Link</a>
+                        </p>
+                      )}
                       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '5px' }}>
-                        <span className="tag">Confirmed</span>
-                        <button
-                          className="btn-primary btn-sm"
-                          style={{ padding: '2px 8px', fontSize: '0.8rem' }}
-                          onClick={() => navigate(`/classroom/${item._id}`)}
+                        <span className={`tag ${item.paymentStatus === 'Paid' ? 'tag-paid' : item.paymentStatus === 'Under Review' ? 'tag-review' : 'tag-pending'}`}>
+                          {item.paymentStatus === 'Paid' ? 'Paid' : item.paymentStatus === 'Under Review' ? 'Under Review' : 'Unpaid'}
+                        </span>
+                        {item.paymentStatus === 'Paid' ? (
+                          <div style={{ display: 'flex', gap: '5px' }}>
+                            <button
+                              className="btn-success btn-sm"
+                              style={{ padding: '2px 8px', fontSize: '0.8rem' }}
+                              onClick={() => {
+                                if (item.zoomLink) {
+                                  window.open(item.zoomLink, '_blank');
+                                } else {
+                                  navigate(`/classroom/${item._id}`);
+                                }
+                              }}
+                            >
+                              {item.zoomLink ? "Join Zoom" : "Join Class"}
+                            </button>
+                            <button
+                              className="btn-secondary btn-sm"
+                              style={{ padding: '2px 8px', fontSize: '0.8rem', background: '#f59e0b', borderColor: '#f59e0b', color: 'white' }}
+                              onClick={() => setSelectedBookingForRating(item)}
+                            >
+                              {item.ratingToTeacher && item.ratingToStudent ? "View Rating" : "Rate"}
+                            </button>
+                          </div>
+                        ) : item.paymentStatus === 'Under Review' ? (
+                          <button
+                            className="btn-secondary btn-sm"
+                            style={{ padding: '2px 8px', fontSize: '0.8rem', cursor: 'not-allowed' }}
+                            disabled
+                          >
+                            Verifying...
+                          </button>
+                        ) : (
+                          <button
+                            className="btn-primary btn-sm"
+                            style={{ padding: '2px 8px', fontSize: '0.8rem' }}
+                            onClick={async () => {
+                              try {
+                                // Create a payment record then redirect to QR pay
+                                const payRes = await fetch(`${url}/api/payment/create-payment`, {
+                                  method: 'POST',
+                                  headers: {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': `Bearer ${token}`
+                                  },
+                                  body: JSON.stringify({
+                                    studentId: user._id,
+                                    teacherId: item.teacherId?._id,
+                                    amount: item.teacherId?.price || 1000,
+                                    bookingId: item._id
+                                  })
+                                });
+                                const payData = await payRes.json();
+                                navigate('/payment-qr', {
+                                  state: {
+                                    paymentRef: payData.success ? payData.payment.paymentRef : 'LH' + Date.now(),
+                                    paymentId: payData.success ? payData.payment._id : null,
+                                    amount: item.teacherId?.price || 1000,
+                                    teacherName: item.teacherId?.name,
+                                    upiId: item.teacherId?.upiId,
+                                    qrCode: item.teacherId?.qrCode,
+                                    phone: item.teacherId?.phone
+                                  }
+                                });
+                              } catch (err) {
+                                console.error('Pay Now error:', err);
+                              }
+                            }}
+                          >
+                            Pay Now
+                          </button>
+                        )}
+                        <button 
+                          className="cancel-btn" 
+                          onClick={() => cancelBooking(item._id)}
                         >
-                          Join
+                          Cancel
                         </button>
                       </div>
                     </div>
@@ -342,6 +490,13 @@ const StudentsDashboard = () => {
           </div>
         </div>
       </div>
+      {selectedBookingForRating && (
+        <RatingModal 
+          booking={selectedBookingForRating} 
+          onClose={() => setSelectedBookingForRating(null)} 
+          onRatingSuccess={fetchBookings}
+        />
+      )}
     </motion.div>
   );
 };

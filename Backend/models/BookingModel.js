@@ -21,8 +21,44 @@ const bookingSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Confirmed', 'Completed', 'Cancelled'],
-        default: 'Confirmed'
+        enum: ['Pending', 'Confirmed', 'Completed', 'Cancelled'],
+        default: 'Pending'
+    },
+    paymentStatus: {
+        type: String,
+        enum: ['Pending', 'Under Review', 'Paid', 'Failed'],
+        default: 'Pending'
+    },
+    transactionId: {
+        type: String
+    },
+    paymentScreenshot: {
+        type: String
+    },
+    zoomLink: {
+        type: String
+    },
+    meetingId: {
+        type: String
+    },
+    passcode: {
+        type: String
+    },
+    ratingToTeacher: {
+        type: Number,
+        min: 1,
+        max: 5
+    },
+    commentToTeacher: {
+        type: String
+    },
+    ratingToStudent: {
+        type: Number,
+        min: 1,
+        max: 5
+    },
+    commentToStudent: {
+        type: String
     }
 }, { timestamps: true });
 

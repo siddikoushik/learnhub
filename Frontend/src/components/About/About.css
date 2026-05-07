@@ -42,7 +42,8 @@
 .feature-icon {
   font-size: 40px;
   margin-bottom: 20px;
-  background: #eff6ff;
+  background: var(--bg-main);
+  color: var(--primary);
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -73,8 +74,8 @@
 
 .testimonial-card {
   padding: 32px;
-  background: #f8fafc;
-  border: none;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-light);
 }
 
 .comment {
@@ -131,7 +132,7 @@
 }
 
 .btn-large {
-  background: white;
+  background: var(--bg-surface);
   color: var(--primary);
   padding: 16px 40px;
   font-size: 18px;
@@ -139,7 +140,7 @@
 }
 
 .btn-large:hover {
-  background: #f1f5f9;
+  background: var(--bg-main);
   transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--glass-shadow);
 }
